@@ -8,19 +8,47 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      message: 'hello',
+      allCharacters: null
     };
   }
 
+
+  componentDidMount(){
+    var request = new XMLHttpRequest();
+    var appThis = this;
+    console.log('appthis:', appThis)
+
+    request.addEventListener("load", function(){
+      console.log("DONE");
+      const responseData = JSON.parse( this.responseText );
+      console.log( 'resdata: all characters:', responseData );
+      appThis.setState({allCharacters: responseData});
+    });
+
+    request.open("GET", '/characters');
+    request.send();
+    // this.setState({requested:true});
+  }
+
+  componentDidUpdate(){
+    console.log("State after update:", this.state);
+  }
+
   render() {
+
     return (
       <div>
-        <Form />
         Welcome.
-        <Counter message={this.state.message} />
+
+
+
+
       </div>
     );
   }
 }
 
 export default hot(module)(App);
+        // <Form />
+
+ // <Counter message={this.state.message} />

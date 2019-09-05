@@ -28,6 +28,10 @@ app.use(cookieParser());
 app.use(express.urlencoded({
   extended: true
 }));
+//!!
+var path = require('path')
+app.use(express.static(path.join(__dirname,'public')))
+console.log("DIRNAME", __dirname)
 
 // Set react-views to be the default view engine
 const reactEngine = require('express-react-views').createEngine();

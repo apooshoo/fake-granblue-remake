@@ -9,6 +9,7 @@ module.exports = {
   entry: ['./src/client/index.jsx'],
   output: {
     publicPath: '/',
+    // publicPath: './src/public/',
     path: resolve(__dirname, '..', 'build', 'client'),
     filename: '[name].js'
   },

@@ -5,7 +5,25 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 
 const commonConfig = require('./webpack.config.common');
+//-----------------------
+// const srcPath = path.join(__dirname, '..', 'public')
 
+// const rules = []
+
+// const includePaths = [
+//   srcPath
+// ]
+//     // handle images
+//     rules.push({
+//       test: /\.(png|gif|jpe?g|svg|ico)$/,
+//       include: includePaths,
+//       use: [{
+//         loader: 'file-loader',
+//         options: {
+//           name: 'images/[name]-[hash].[ext]'
+//         }
+//       }
+//-----------------------
 module.exports = merge(commonConfig, {
   mode: 'development',
   entry: [`webpack-hot-middleware/client?http://localhost:${process.env.HTTP_PORT}&reload=true&overlay=false`],
