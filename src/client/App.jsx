@@ -1,7 +1,7 @@
 import React from 'react';
 import { hot } from 'react-hot-loader';
 
-import Counter from './components/counter/counter';
+import Main from './components/main/main';
 import Form from './components/form/form';
 
 class App extends React.Component {
@@ -38,7 +38,10 @@ class App extends React.Component {
 
     return (
       <div>
-        Welcome.
+        <Main
+            allCharacters={this.state.allCharacters}
+        />
+
 
 
 
