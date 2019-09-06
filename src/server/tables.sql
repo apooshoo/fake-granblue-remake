@@ -16,7 +16,9 @@ CREATE TABLE IF NOT EXISTS characters (
 	health INTEGER,
 	attack INTEGER,
 	description TEXT,
-	subtitle TEXT
+	subtitle TEXT,
+	active BOOLEAN DEFAULT FALSE,
+	slot INTEGER DEFAULT NULL
 );
 
 CREATE TABLE IF NOT EXISTS users (

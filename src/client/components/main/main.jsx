@@ -8,7 +8,7 @@ class Main extends React.Component {
     super();
     this.state = {
         allCharacters: null,
-        usersCharacters: null,
+        usersCharacters: [],
         update: false
     };
   }
@@ -21,23 +21,34 @@ class Main extends React.Component {
   draw(){
     let userId = this.props.userId;
     let allCharacters = [...this.state.allCharacters];
+
     let randomIndex = Math.floor(Math.random()*allCharacters.length);
     let randomChar = allCharacters[randomIndex];
 
-    fetch('/characters/new', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        charId: randomChar.id,
-        userId: userId,
-      })
-    }).then(response => response.json())
-    .then(response => console.log(response))
-    .then(allCharacters.push(randomChar))
-    .then(this.setState({allCharacters: allCharacters}));
+    let temp = [...this.state.usersCharacters].filter(character => { character.id === randomChar.id });
+    console.log('temp', temp)
+    if (temp.length === 0){
+        console.log('ALREADY HAVE THIS CHAR');
+    } else {
+        this.setState({usersCharacters: this.state.usersCharacters.concat(randomChar)})
+
+        fetch('/characters/new', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            charId: randomChar.id,
+            userId: userId,
+          })
+        }).then(response => response.json())
+        .then(response => console.log(response));
+    }
+
+
+
+
 
   }
 
@@ -62,7 +73,11 @@ class Main extends React.Component {
     request.addEventListener("load", function(){
       let responseData = JSON.parse( this.responseText );
       console.log( 'resdata::', responseData );
-      mainThis.setState({usersCharacters: responseData});
+      if (responseData === null){
+        mainThis.setState({usersCharacters: []});
+      } else {
+        mainThis.setState({usersCharacters: responseData});
+      }
     });
 
     request.open("GET", `/characters/${userId}`);
@@ -80,11 +95,9 @@ class Main extends React.Component {
 
   render() {
     let allCharacters = this.state.allCharacters;
-
-    if(allCharacters === null){
-        return <p>LOADING...</p>
-    } else {
-        let charactersList = allCharacters.map((character, index) => {
+    let charactersList;
+    if (allCharacters != null){
+        charactersList = allCharacters.map((character, index) => {
             return(
                 <div key={index} className={styles.listItem}>
                     <h4>Name: {character.name}</h4>
@@ -104,24 +117,26 @@ class Main extends React.Component {
                 </div>
             )
         });
-
-
-        return (
-            <div>
-                <button onClick={()=>{this.draw()}}>big draw button</button>
-
-
-                <div>
-
-                </div>
-
-
-                <div>
-                    {charactersList}
-                </div>
-            </div>
-        );
+    } else {
+        return <p>LOADING</p>
     }
+
+    return (
+        <div>
+            <button onClick={()=>{this.draw()}}>big draw button</button>
+
+            <p>PARTY</p>
+            <div>
+
+            </div>
+
+
+            <div>
+                {charactersList}
+            </div>
+        </div>
+    );
+
 
 
   }
