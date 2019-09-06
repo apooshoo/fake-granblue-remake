@@ -16,8 +16,7 @@ CREATE TABLE IF NOT EXISTS characters (
 	health INTEGER,
 	attack INTEGER,
 	description TEXT,
-	subtitle TEXT,
-	slot INTEGER DEFAULT NULL
+	subtitle TEXT
 );
 
 CREATE TABLE IF NOT EXISTS users (
@@ -29,5 +28,6 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS users_characters (
 	id SERIAL PRIMARY KEY,
 	character_id INTEGER,
+	slot INTEGER DEFAULT NULL,
 	user_id INTEGER
 );

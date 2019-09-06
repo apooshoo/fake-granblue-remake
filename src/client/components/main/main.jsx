@@ -111,7 +111,7 @@ class Main extends React.Component {
         return char.id === character.id;
     });
 
-    //--------------------------------------------------------AJAX REQ TO CHANGE SLOT TO NULL DONE
+    //--------------------------------------------------------AJAX REQ TO CHANGE SLOT TO NULL
     let partyList = [...this.state.partyList];
     if (character.slot != null){
         //if character is already in party,find its old position and delete it
@@ -127,8 +127,9 @@ class Main extends React.Component {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            charId: character.id,
             slot: null,
+            charId: character.id,
+            userId: userId,
           })
         }).then(response => response.json())
         .then(response => console.log("edited to:", response))
@@ -140,7 +141,7 @@ class Main extends React.Component {
     }
 
 
-    //--------------------------------------------------------AJAX REQ TO CHANGE SLOT TO NULL DONE
+    //--------------------------------------------------------AJAX REQ TO CHANGE SLOT TO NULL
     if (existingInSlot.length > 0){
         //there is someone already here! Clear their stats before proceeding!
         let existingId = existingInSlot[0].id;
@@ -158,8 +159,9 @@ class Main extends React.Component {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            charId: existingId,
             slot: null,
+            charId: character.id,
+            userId: userId,
           })
         }).then(response => response.json())
         .then(response => console.log("edited to:", response))
@@ -191,8 +193,9 @@ class Main extends React.Component {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        charId: character.id,
         slot: this.state.setSlot,
+        charId: character.id,
+        userId: userId,
       })
     }).then(response => response.json())
     .then(response => console.log("edited to:", response))
@@ -202,10 +205,6 @@ class Main extends React.Component {
     }))
     .then(this.mainMode());
 
-    // this.setState({
-    //     usersCharacters: usersCharacters,
-    //     partyList: partyList
-    // });
     // //now redirect back! dont worry about resetting setSlot, mainMode() will do it for you.
     // this.mainMode();
   }

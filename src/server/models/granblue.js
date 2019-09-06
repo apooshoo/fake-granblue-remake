@@ -86,9 +86,9 @@ module.exports = (dbPoolInstance) => {
   let editSlot = (data, callback) => {
     console.log('in editSlot model');
     console.log(data);
-    let values = [parseInt(data.charId), data.slot];
+    let values = [data.slot, parseInt(data.charId), parseInt(data.userId)];
 
-    const query = `UPDATE characters SET slot = $2 WHERE id = $1 RETURNING *`;
+    const query = `UPDATE users_characters SET slot = $1 WHERE character_id = $2 AND user_id = $3 RETURNING *`;
     dbPoolInstance.query(query, values, (err, result) => {
         if(err){
             callback(err, null);
