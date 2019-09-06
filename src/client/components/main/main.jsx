@@ -25,13 +25,10 @@ class Main extends React.Component {
     let randomIndex = Math.floor(Math.random()*allCharacters.length);
     let randomChar = allCharacters[randomIndex];
 
-    let temp = [...this.state.usersCharacters].filter(character => { character.id === randomChar.id });
-    console.log('temp', temp)
-    if (temp.length === 0){
-        console.log('ALREADY HAVE THIS CHAR');
+    let temp = this.state.usersCharacters.filter(char => char.id === randomChar.id)
+    if (temp.length > 0){
+        console.log('have already')
     } else {
-        this.setState({usersCharacters: this.state.usersCharacters.concat(randomChar)})
-
         fetch('/characters/new', {
           method: 'POST',
           headers: {
@@ -43,11 +40,9 @@ class Main extends React.Component {
             userId: userId,
           })
         }).then(response => response.json())
-        .then(response => console.log(response));
-    }
-
-
-
+        .then(response => console.log(response))
+        .then(this.setState({usersCharacters: [...this.state.usersCharacters].concat(randomChar)}))
+    };
 
 
   }
@@ -119,8 +114,16 @@ class Main extends React.Component {
         });
     } else {
         return <p>LOADING</p>
-    }
+    };
 
+    let activeParty = [...this.state.usersCharacters].filter((character) => {
+        return character.active === true;
+    });
+    let partyList = activeParty.map(character => {
+        return <p>{character.name} is active</p>
+    });
+
+//MAIN RETURN
     return (
         <div>
             <button onClick={()=>{this.draw()}}>big draw button</button>
