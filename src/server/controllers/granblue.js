@@ -62,10 +62,25 @@ module.exports = (db) => {
     });
   };
 
+  let editSlot = (req, res) => {
+    console.log('in editSlot ctrlr');
+    console.log("body:", req.body);
+    db.granblue.editSlot(req.body, (err, result) => {
+        if(err){
+            console.log('err,', err);
+        } else if (result === null){
+            res.status(404).send('not found');
+        } else {
+            res.send(result);
+        };
+    });
+  };
+
   return {
     getUsersCharacters : getUsersCharacters,
     getAll : getAll,
-    add : add
+    add : add,
+    editSlot : editSlot
   }
 
 };

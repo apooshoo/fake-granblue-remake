@@ -12,7 +12,7 @@ class Main extends React.Component {
         partyList: [null,null,null],
         setSlot: null,
         mainState: 'main',
-        update: false
+        requested: false
     };
   }
 
@@ -97,7 +97,8 @@ class Main extends React.Component {
     console.log('prev character slot', character.slot);
     //^^^if character.slot != null it means it already is in party
 
-
+    let userId = this.props.userId;
+    let mainThis = this;
     let usersCharacters = [...this.state.usersCharacters];
 
     //check if target is empty
@@ -110,23 +111,36 @@ class Main extends React.Component {
         return char.id === character.id;
     });
 
+    //--------------------------------------------------------AJAX REQ TO CHANGE SLOT TO NULL DONE
     let partyList = [...this.state.partyList];
     if (character.slot != null){
         //if character is already in party,find its old position and delete it
         partyList[character.slot-1] = null;
         //make sure the usersCharacters is also updated!
         usersCharacters[stateCharIndex].slot = null;
-        this.setState({partyList: partyList, usersCharacters: usersCharacters});
         //now we may proceed!
-        console.log('deleting this characters old position')
-        this.setActive(character);
+        console.log('deleting this characters old position');
+        fetch('/characters/editSlot', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            charId: character.id,
+            slot: null,
+          })
+        }).then(response => response.json())
+        .then(response => console.log("edited to:", response))
+        .then(this.setState({partyList: partyList, usersCharacters: usersCharacters}))
+        .then(this.setActive(character));
+
+        // this.setState({partyList: partyList, usersCharacters: usersCharacters});
+        // this.setActive(character);
     }
 
-    // //is anyone else already in this slot? Check it!
-    // let usersCharacters = [...this.state.usersCharacters];
-    // let existingInSlot = usersCharacters.filter(char => {
-    //     return char.slot === this.state.setSlot;
-    // });
+
+    //--------------------------------------------------------AJAX REQ TO CHANGE SLOT TO NULL DONE
     if (existingInSlot.length > 0){
         //there is someone already here! Clear their stats before proceeding!
         let existingId = existingInSlot[0].id;
@@ -134,11 +148,30 @@ class Main extends React.Component {
             return char.id === existingId;
         });
         usersCharacters[existingIndex].slot = null;
-        this.setState({usersCharacters: usersCharacters});
         //now we've cleared the slot of the prev occupant, we may proceed!
         console.log('deleting someone else in this slot, restarting')
-        this.setActive(character);
+
+        fetch('/characters/editSlot', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            charId: existingId,
+            slot: null,
+          })
+        }).then(response => response.json())
+        .then(response => console.log("edited to:", response))
+        .then(this.setState({usersCharacters: usersCharacters}))
+        .then(this.setActive(character));
+
+        // this.setState({usersCharacters: usersCharacters});
+
+        // this.setActive(character);
     };
+
+    //--------------------------------------------------------AJAX REQ TO CHANGE SLOT TO SLOT
     //either nobody was here, or there was and you have cleared it. Now save your character in!
     //you will need to add you character to the party list, and also edit the usersCharacters state and DB.
     //Let's test the states without DB for now.
@@ -151,15 +184,30 @@ class Main extends React.Component {
     partyList[this.state.setSlot-1] = usersCharacters[stateCharIndex];
     //prepared to save party list
 
-    this.setState({
+    fetch('/characters/editSlot', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        charId: character.id,
+        slot: this.state.setSlot,
+      })
+    }).then(response => response.json())
+    .then(response => console.log("edited to:", response))
+    .then(this.setState({
         usersCharacters: usersCharacters,
         partyList: partyList
-    });
-    //now redirect back! dont worry about resetting setSlot, mainMode() will do it for you.
-    this.mainMode();
+    }))
+    .then(this.mainMode());
 
-
-
+    // this.setState({
+    //     usersCharacters: usersCharacters,
+    //     partyList: partyList
+    // });
+    // //now redirect back! dont worry about resetting setSlot, mainMode() will do it for you.
+    // this.mainMode();
   }
 
   //on click on party thumbnail, saves slot being clicked on

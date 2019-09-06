@@ -4,6 +4,7 @@ module.exports = (app, db) => {
 
   app.get('/characters/:id', granblue.getUsersCharacters);
   app.post('/characters/new', granblue.add);
+  app.post('/characters/editSlot', granblue.editSlot);
 
   app.get('/characters', granblue.getAll);
 };

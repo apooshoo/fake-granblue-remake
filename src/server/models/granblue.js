@@ -83,27 +83,27 @@ module.exports = (dbPoolInstance) => {
 
   };
 
-  // let getMine = (data, callback) => {
-  //   console.log('in getMine model');
-  //   console.log('userid: ', data.userId);
-  //   let values = [parseInt(data.userId)];
-  //   const query = `SELECT * FROM characters INNER JOIN users_characters ON (users_characters.character_id = characters.id) WHERE users_characters.user_id = $1)`;
-  //   console.log(query)
-  //   dbPoolInstance.query(query, values, (err, result) => {
-  //       if(err){
-  //           callback(err, null);
-  //       } else if (result.rows.length > 0){
-  //           console.log("getmine works");
-  //           callback(null, result.rows);
-  //       } else {
-  //           callback(null, null);
-  //       };
-  //   });
-  // };
+  let editSlot = (data, callback) => {
+    console.log('in editSlot model');
+    console.log(data);
+    let values = [parseInt(data.charId), data.slot];
+
+    const query = `UPDATE characters SET slot = $2 WHERE id = $1 RETURNING *`;
+    dbPoolInstance.query(query, values, (err, result) => {
+        if(err){
+            callback(err, null);
+        } else if (result.rows.length > 0){
+            callback(null, result.rows);
+        } else {
+            callback(null, null);
+        }
+    });
+  };
 
   return {
     getAll,
     add,
-    getUsersCharacters
+    getUsersCharacters,
+    editSlot
   };
 };
