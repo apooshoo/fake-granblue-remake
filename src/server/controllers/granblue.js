@@ -20,27 +20,31 @@ module.exports = (db) => {
   //       }
   //     });
   // };
+
+
+  let getUsersCharacters = (req, res) => {
+    db.granblue.getUsersCharacters(req.params, (err, result) => {
+        if(err){
+            console.log(err);
+        } else if (result === null){
+            res.send('null');
+        } else {
+            res.send(result);
+        }
+    });
+  };
+
+
+
   let getAll = (req, res) => {
     console.log('in ctrler getAll');
-    db.granblue.getAll((err, allCharacters) => {
+    db.granblue.getAll((err, result) => {
         if(err){
             console.log('err', err);
-        } else if (allCharacters === null){
+        } else if (result === null){
             res.status(404).send('not found');
         } else {
-            db.granblue.getUsersCharacters(req.params, (err, usersCharacters) => {
-                if(err){
-                    console.log(err);
-                } else if (usersCharacters === null){
-                    res.status(404).send('not found');
-                } else {
-                    let data = {
-                        allCharacters: allCharacters,
-                        usersCharacters: usersCharacters
-                    };
-                    res.send(data);
-                }
-            });
+            res.send(result);
         };
     });
   };
@@ -59,6 +63,7 @@ module.exports = (db) => {
   };
 
   return {
+    getUsersCharacters : getUsersCharacters,
     getAll : getAll,
     add : add
   }

@@ -24,16 +24,6 @@ class Main extends React.Component {
     let randomIndex = Math.floor(Math.random()*allCharacters.length);
     let randomChar = allCharacters[randomIndex];
 
-    var mainThis = this;
-    // var request = new XMLHttpRequest();
-    // request.addEventListener("load", function(){
-    //     const responseData = JSON.parse(this.responseText);
-    //     console.log('responsedata:', responseData);
-    // });
-
-    // request.open("POST", '/characters/new');
-    // request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    // request.send(JSON.stringify(data));
     fetch('/characters/new', {
       method: 'POST',
       headers: {
@@ -49,33 +39,44 @@ class Main extends React.Component {
     .then(allCharacters.push(randomChar))
     .then(this.setState({allCharacters: allCharacters}));
 
-
   }
+
+
 
   componentDidMount(){
     let userId = this.props.userId;
+    let mainThis = this;
+
+    var requestAll = new XMLHttpRequest();
+    requestAll.addEventListener("load", function(){
+      let responseData = JSON.parse( this.responseText );
+      console.log( 'resdata:', responseData );
+      mainThis.setState({allCharacters: responseData});
+    });
+    requestAll.open("GET", `/characters`);
+    requestAll.send();
+
 
     var request = new XMLHttpRequest();
-    var mainThis = this;
-
+    // var mainThis = this;
     request.addEventListener("load", function(){
-      const responseData = JSON.parse( this.responseText );
+      let responseData = JSON.parse( this.responseText );
       console.log( 'resdata::', responseData );
-      mainThis.setState({allCharacters: responseData.allCharacters, usersCharacters: responseData.usersCharacters});
+      mainThis.setState({usersCharacters: responseData});
     });
 
     request.open("GET", `/characters/${userId}`);
     request.send();
-
-
-
-
     // this.setState({requested:true});
   }
+
+
 
   componentDidUpdate(){
     console.log("State after update:", this.state);
   }
+
+
 
   render() {
     let allCharacters = this.state.allCharacters;
@@ -108,6 +109,13 @@ class Main extends React.Component {
         return (
             <div>
                 <button onClick={()=>{this.draw()}}>big draw button</button>
+
+
+                <div>
+
+                </div>
+
+
                 <div>
                     {charactersList}
                 </div>
