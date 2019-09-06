@@ -2,13 +2,16 @@ import React from 'react';
 // import PropTypes from 'prop-types';
 import styles from './style.scss';
 import Spritesheet from 'react-responsive-spritesheet';
-
+//modes: main, showAll
 class Main extends React.Component {
   constructor() {
     super();
     this.state = {
         allCharacters: null,
         usersCharacters: [],
+        partyList: [null,null,null],
+        setSlot: null,
+        mainState: 'main',
         update: false
     };
   }
@@ -86,16 +89,100 @@ class Main extends React.Component {
     console.log("State after update:", this.state);
   }
 
+  //on selecting character to put into slot
+  //character is from usersCharacters
+  setActive(character){
+    console.log('setting active');
+    console.log('slot to save to:', this.state.setSlot)
+    console.log('prev character slot', character.slot);
+    //^^^if character.slot != null it means it already is in party
 
+
+    let usersCharacters = [...this.state.usersCharacters];
+
+    //check if target is empty
+    let existingInSlot = usersCharacters.filter(char => {
+        return char.slot === this.state.setSlot;
+    });
+
+    //check index in state of your character
+    let stateCharIndex = usersCharacters.findIndex(char => {
+        return char.id === character.id;
+    });
+
+    let partyList = [...this.state.partyList];
+    if (character.slot != null){
+        //if character is already in party,find its old position and delete it
+        partyList[character.slot-1] = null;
+        //make sure the usersCharacters is also updated!
+        usersCharacters[stateCharIndex].slot = null;
+        this.setState({partyList: partyList, usersCharacters: usersCharacters});
+        //now we may proceed!
+        console.log('deleting this characters old position')
+        this.setActive(character);
+    }
+
+    // //is anyone else already in this slot? Check it!
+    // let usersCharacters = [...this.state.usersCharacters];
+    // let existingInSlot = usersCharacters.filter(char => {
+    //     return char.slot === this.state.setSlot;
+    // });
+    if (existingInSlot.length > 0){
+        //there is someone already here! Clear their stats before proceeding!
+        let existingId = existingInSlot[0].id;
+        let existingIndex = usersCharacters.findIndex(char => {
+            return char.id === existingId;
+        });
+        usersCharacters[existingIndex].slot = null;
+        this.setState({usersCharacters: usersCharacters});
+        //now we've cleared the slot of the prev occupant, we may proceed!
+        console.log('deleting someone else in this slot, restarting')
+        this.setActive(character);
+    };
+    //either nobody was here, or there was and you have cleared it. Now save your character in!
+    //you will need to add you character to the party list, and also edit the usersCharacters state and DB.
+    //Let's test the states without DB for now.
+    console.log('adding to slot now!')
+    // let stateCharId = usersCharacters.findIndex(char => {
+    //     return char.id === character.id;
+    // });
+    usersCharacters[stateCharIndex].slot = this.state.setSlot;
+    //prepared to save state usersCharacters
+    partyList[this.state.setSlot-1] = usersCharacters[stateCharIndex];
+    //prepared to save party list
+
+    this.setState({
+        usersCharacters: usersCharacters,
+        partyList: partyList
+    });
+    //now redirect back! dont worry about resetting setSlot, mainMode() will do it for you.
+    this.mainMode();
+
+
+
+  }
+
+  //on click on party thumbnail, saves slot being clicked on
+  showAllMode(index){
+    console.log('changing to showall mode');
+    let slot = index + 1;
+    this.setState({mainState: 'showAll', setSlot: slot});
+  }
+
+  mainMode(){
+    console.log('changing to main mode');
+    this.setState({mainState: 'main', setSlot: null});
+  }
 
   render() {
-    let allCharacters = this.state.allCharacters;
+    let usersCharacters = this.state.usersCharacters;
     let charactersList;
-    if (allCharacters != null){
-        charactersList = allCharacters.map((character, index) => {
+    if (usersCharacters != null){
+        charactersList = usersCharacters.map((character, index) => {
             return(
                 <div key={index} className={styles.listItem}>
                     <h4>Name: {character.name}</h4>
+                    <button onClick={()=>{this.setActive(character)}}>Set Active</button>
                     <p>Sprite:</p>
                     <Spritesheet
                         className={styles.sprite}
@@ -112,33 +199,49 @@ class Main extends React.Component {
                 </div>
             )
         });
-    } else {
-        return <p>LOADING</p>
-    };
+    }
 
-    let activeParty = [...this.state.usersCharacters].filter((character) => {
-        return character.active === true;
+    let partyList = [...this.state.partyList].map((char, index) => {
+        if(char === null){
+            return <div key={index} onClick={()=>this.showAllMode(index)}><p>Empty</p></div>
+        } else {
+            return <div key={index} onClick={()=>this.showAllMode(index)}><p>{char.name}</p></div>
+        }
     });
-    let partyList = activeParty.map(character => {
-        return <p>{character.name} is active</p>
-    });
+
+
+
+
 
 //MAIN RETURN
-    return (
-        <div>
-            <button onClick={()=>{this.draw()}}>big draw button</button>
-
-            <p>PARTY</p>
+    if (this.state.mainState === 'main'){
+        return (
             <div>
+                <button onClick={()=>{this.draw()}}>big draw button</button>
 
+                <p>PARTY</p>
+                <div>
+                    {partyList}
+                </div>
+
+
+                <div>
+
+                </div>
             </div>
+        );
+    } else if (this.state.mainState === 'showAll'){
+        return (
+            <React.Fragment>
+                <button onClick={()=>{this.mainMode()}}>back to main</button>
+                <p>SELECT CHAR TO INSERT</p>
+                <div>
+                    {charactersList}
+                </div>
+            </React.Fragment>
+            )
+    }
 
-
-            <div>
-                {charactersList}
-            </div>
-        </div>
-    );
 
 
 

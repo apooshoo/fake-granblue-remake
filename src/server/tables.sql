@@ -17,7 +17,6 @@ CREATE TABLE IF NOT EXISTS characters (
 	attack INTEGER,
 	description TEXT,
 	subtitle TEXT,
-	active BOOLEAN DEFAULT FALSE,
 	slot INTEGER DEFAULT NULL
 );
 
