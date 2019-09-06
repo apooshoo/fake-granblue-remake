@@ -28,15 +28,27 @@ module.exports = (db) => {
         } else if (result === null){
             res.status(404).send('not found');
         } else {
-            res.send( result)
-        }
+            res.send( result);
+        };
+    });
+  };
+
+  let add = (req, res) => {
+    console.log('in ctr add');
+    db.granblue.add(req.body, (err, result) => {
+        if(err){
+            console.log('err,', err);
+        } else if (result === null){
+            res.status(404).send('not found');
+        } else {
+            res.send(result);
+        };
     });
   };
 
   return {
-    // get : get,
-    // apiget : apiget
-    getAll : getAll
+    getAll : getAll,
+    add : add
   }
 
 };

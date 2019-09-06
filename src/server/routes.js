@@ -2,6 +2,6 @@ module.exports = (app, db) => {
 
   const granblue = require('./controllers/granblue')(db);
 
-  // app.get('/pokemon/:id', pokemon.get);
+  app.post('/characters/new', granblue.add);
   app.get('/characters', granblue.getAll);
 };

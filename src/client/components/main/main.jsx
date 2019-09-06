@@ -7,29 +7,86 @@ class Main extends React.Component {
   constructor() {
     super();
     this.state = {
-        myCharacters: null
+        allCharacters: null,
+        myCharacters: null,
+        update: false
     };
   }
 
+  addCharacter(character){
+    let allCharacters = this.state.characters;
+    console.log('character to add:', character);
+  }
+
   draw(){
-    let allCharacters = this.props.allCharacters;
+    let userId = this.props.userId;
+    let allCharacters = [...this.state.allCharacters];
     let randomIndex = Math.floor(Math.random()*allCharacters.length);
     let randomChar = allCharacters[randomIndex];
+
+    var mainThis = this;
+    // var request = new XMLHttpRequest();
+    // request.addEventListener("load", function(){
+    //     const responseData = JSON.parse(this.responseText);
+    //     console.log('responsedata:', responseData);
+    // });
+
+    // request.open("POST", '/characters/new');
+    // request.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    // request.send(JSON.stringify(data));
+    fetch('/characters/new', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        charId: randomChar.id,
+        userId: userId,
+      })
+    }).then(response => response.json())
+    .then(response => console.log(response))
+    .then(allCharacters.push(randomChar))
+    .then(this.setState({allCharacters: allCharacters}));
+
+
+  }
+
+  componentDidMount(){
+    var request = new XMLHttpRequest();
+    var appThis = this;
+    console.log('appthis:', appThis)
+
+    request.addEventListener("load", function(){
+      const responseData = JSON.parse( this.responseText );
+      console.log( 'resdata: all characters:', responseData );
+      appThis.setState({allCharacters: responseData});
+    });
+
+    request.open("GET", '/characters');
+    request.send();
+
+
+
+
+    // this.setState({requested:true});
+  }
+
+  componentDidUpdate(){
+    console.log("State after update:", this.state);
   }
 
   render() {
-    let allCharacters = this.props.allCharacters;
+    let allCharacters = this.state.allCharacters;
 
     if(allCharacters === null){
         return <p>LOADING...</p>
     } else {
-        let characterslist = allCharacters.map((character, index) => {
+        let charactersList = allCharacters.map((character, index) => {
             return(
-                <div key={index}>
+                <div key={index} className={styles.listItem}>
                     <h4>Name: {character.name}</h4>
-                    <span>Art:</span>
-                    <img className={styles.art} src={character.art}/>
-                    <span>Sprite:</span>
+                    <p>Sprite:</p>
                     <Spritesheet
                         className={styles.sprite}
                         style={{width:100, height:100}}
@@ -51,7 +108,7 @@ class Main extends React.Component {
             <div>
                 <button onClick={()=>{this.draw()}}>big draw button</button>
                 <div>
-                    {characterslist}
+                    {charactersList}
                 </div>
             </div>
         );

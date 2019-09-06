@@ -1,10 +1,8 @@
--- -- create pokemons table
--- CREATE TABLE IF NOT EXISTS pokemons (
---   id SERIAL PRIMARY KEY,
---   name TEXT,
---   img TEXT);
+
 
 DROP TABLE IF EXISTS characters;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS users_characters;
 
 CREATE TABLE IF NOT EXISTS characters (
 	id SERIAL PRIMARY KEY,
@@ -19,4 +17,16 @@ CREATE TABLE IF NOT EXISTS characters (
 	attack INTEGER,
 	description TEXT,
 	subtitle TEXT
+);
+
+CREATE TABLE IF NOT EXISTS users (
+	id SERIAL PRIMARY KEY,
+	username TEXT,
+	password TEXT
+);
+
+CREATE TABLE IF NOT EXISTS users_characters (
+	id SERIAL PRIMARY KEY,
+	character_id INTEGER,
+	user_id INTEGER
 );

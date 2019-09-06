@@ -1,4 +1,6 @@
-
+INSERT INTO users (username, password) VALUES
+('jon', 'password'),
+('joy', 'password');
 
 INSERT INTO characters (name, art, home_thumbnail, home_sprite, battle_thumbnail, spritesheet, health, attack, description, subtitle) VALUES
 ('Herja', '/herja/herja-art.png', '/herja/herja-home.jpg', '/herja/herja-home-sprite.png', '/herja/herja-battle.jpg', '/herja/herja-spritesheet.png', 100, 20, 'This agent captain appears as stark and cold as the blade she wields, but underneath that gruff exterior she''s just as emotional as anyone else. Whenever she finds herself falling in love, she throws herself into her training, hammering it out with every blow of her sword.', 'Lady Mercenary'),
