@@ -22,13 +22,25 @@ module.exports = (db) => {
   // };
   let getAll = (req, res) => {
     console.log('in ctrler getAll');
-    db.granblue.getAll((err, result) => {
+    db.granblue.getAll((err, allCharacters) => {
         if(err){
             console.log('err', err);
-        } else if (result === null){
+        } else if (allCharacters === null){
             res.status(404).send('not found');
         } else {
-            res.send( result);
+            db.granblue.getUsersCharacters(req.params, (err, usersCharacters) => {
+                if(err){
+                    console.log(err);
+                } else if (usersCharacters === null){
+                    res.status(404).send('not found');
+                } else {
+                    let data = {
+                        allCharacters: allCharacters,
+                        usersCharacters: usersCharacters
+                    };
+                    res.send(data);
+                }
+            });
         };
     });
   };

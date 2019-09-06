@@ -8,7 +8,7 @@ class Main extends React.Component {
     super();
     this.state = {
         allCharacters: null,
-        myCharacters: null,
+        usersCharacters: null,
         update: false
     };
   }
@@ -53,17 +53,18 @@ class Main extends React.Component {
   }
 
   componentDidMount(){
+    let userId = this.props.userId;
+
     var request = new XMLHttpRequest();
-    var appThis = this;
-    console.log('appthis:', appThis)
+    var mainThis = this;
 
     request.addEventListener("load", function(){
       const responseData = JSON.parse( this.responseText );
-      console.log( 'resdata: all characters:', responseData );
-      appThis.setState({allCharacters: responseData});
+      console.log( 'resdata::', responseData );
+      mainThis.setState({allCharacters: responseData.allCharacters, usersCharacters: responseData.usersCharacters});
     });
 
-    request.open("GET", '/characters');
+    request.open("GET", `/characters/${userId}`);
     request.send();
 
 

@@ -64,6 +64,25 @@ module.exports = (dbPoolInstance) => {
 
   };
 
+  let getUsersCharacters = (data, callback) => {
+    console.log('in getUsersCharacters');
+    console.log(data)
+    let values = [parseInt(data.id)];
+    console.log('values', values);
+
+    const query = `SELECT DISTINCT ON (characters.id) * FROM characters INNER JOIN users_characters ON (users_characters.character_id = characters.id) WHERE users_characters.user_id = $1`;
+    dbPoolInstance.query(query, values, (err, result) => {
+        if(err){
+            callback(err, null);
+        } else if (result.rows.length > 0){
+            callback(null, result.rows);
+        } else {
+            callback(null, null);
+        }
+    });
+
+  };
+
   // let getMine = (data, callback) => {
   //   console.log('in getMine model');
   //   console.log('userid: ', data.userId);
@@ -84,7 +103,7 @@ module.exports = (dbPoolInstance) => {
 
   return {
     getAll,
-    add
-    // getMine
+    add,
+    getUsersCharacters
   };
 };
