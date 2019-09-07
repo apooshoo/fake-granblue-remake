@@ -233,6 +233,12 @@ class Main extends React.Component {
     this.setState({mainState: 'main', setSlot: null});
   }
 
+  archiveMode(){
+    console.log('entering archiveMode');
+    this.setState({mainState: 'archive'});
+  }
+
+
   showArtModal(){
     console.log('showing art modal');
     this.setState({showArtModal: true});
@@ -247,6 +253,11 @@ class Main extends React.Component {
   setDisplayCharacter(character){
     console.log('setting display character');
     this.setState({displayCharacter: character});
+  }
+
+  setAndShowArt(character){
+    this.setDisplayCharacter(character);
+    this.showArtModal();
   }
 
   render() {
@@ -275,6 +286,30 @@ class Main extends React.Component {
             )
         });
     }
+    let archiveList;
+    if (allCharacters != null){
+        archiveList = allCharacters.map((character, index) => {
+            return(
+                <div key={index} className={styles.listItem}>
+                    <p>{character.name}</p>
+                    <Spritesheet
+                        className={styles.sprite}
+                        style={{width:100, height:100}}
+                        image={character.spritesheet}
+                        widthFrame={260}
+                        heightFrame={260}
+                        steps={6}
+                        fps={12}
+                        startAt={1}
+                        endAt={6}
+                        loop={true}
+                        onClick={()=>{this.setAndShowArt(character)}}
+                      />
+                </div>
+            )
+        });
+    }
+
 
     let partyList = [...this.state.partyList].map((char, index) => {
         if(char === null){
@@ -308,8 +343,8 @@ class Main extends React.Component {
                 displayCharacter={this.state.displayCharacter}
                 />
 
-
             <img className={styles.drawbtn} onClick={()=>{this.draw()}} src="./main/draw.png"/>
+            <button onClick={()=>{this.archiveMode()}}>See All Characters</button>
                 <p>Click on thumbnail to swap!</p>
                 <div>
                     {partyList}
@@ -331,6 +366,20 @@ class Main extends React.Component {
                 </div>
             </React.Fragment>
         );
+    } else if (this.state.mainState === 'archive'){
+
+        return (
+            <React.Fragment>
+                <ArtModal
+                    showArtModal={this.state.showArtModal}
+                    hideArtModal={()=>{this.hideArtModal()}}
+                    displayCharacter={this.state.displayCharacter}
+                    />
+                <div>
+                    {archiveList}
+                </div>
+            </React.Fragment>
+        )
     }
 
 
