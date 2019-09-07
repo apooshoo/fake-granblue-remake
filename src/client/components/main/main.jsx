@@ -390,6 +390,7 @@ class Main extends React.Component {
         return(
             <Game
                 mainMode={()=>{this.mainMode()}}
+                partyList={this.state.partyList}
             />
         );
     }
