@@ -74,7 +74,14 @@ class Main extends React.Component {
       if (responseData === null){
         mainThis.setState({usersCharacters: []});
       } else {
-        mainThis.setState({usersCharacters: responseData});
+        // ensure partyList is updated on load
+        let partyList = [null, null, null];
+        responseData.map(char => {
+            if (char.slot != null){
+                partyList[char.slot-1] = char;
+            };
+        });
+        mainThis.setState({usersCharacters: responseData, partyList: partyList});
       }
     });
 
@@ -222,6 +229,7 @@ class Main extends React.Component {
   }
 
   render() {
+    let allCharacters = this.state.allCharacters;
     let usersCharacters = this.state.usersCharacters;
     let charactersList;
     if (usersCharacters != null){
@@ -261,12 +269,14 @@ class Main extends React.Component {
 
 
 //MAIN RETURN
-    if (this.state.mainState === 'main'){
+    if(allCharacters === null){
+        return <p>LOADING...</p>
+    } else if (this.state.mainState === 'main'){
         return (
-            <div>
+            <React.Fragment>
                 <button onClick={()=>{this.draw()}}>big draw button</button>
-
                 <p>PARTY</p>
+
                 <div>
                     {partyList}
                 </div>
@@ -275,7 +285,7 @@ class Main extends React.Component {
                 <div>
 
                 </div>
-            </div>
+            </React.Fragment>
         );
     } else if (this.state.mainState === 'showAll'){
         return (
@@ -286,7 +296,7 @@ class Main extends React.Component {
                     {charactersList}
                 </div>
             </React.Fragment>
-            )
+        );
     }
 
 
@@ -301,53 +311,3 @@ class Main extends React.Component {
 // };
 
 export default Main
-        // <img src="3020001000_sprite_01_a.png" style={{border: '1px solid black'}}/>
-      //   <Spritesheet
-      //   className={styles.sprite}
-      //   style={{width:100, height:100}}
-      //   image={`/herja/herja-spritesheet.png`}
-      //   widthFrame={260}
-      //   heightFrame={260}
-      //   steps={6}
-      //   fps={12}
-      //   startAt={1}
-      //   endAt={6}
-      //   loop={true}
-      // />
-      // <Spritesheet
-      //   className={styles.sprite}
-      //   style={{width:100, height:100}}
-      //   image={`/herja/herja-reverse-spritesheet.png`}
-      //   widthFrame={260}
-      //   heightFrame={260}
-      //   steps={6}
-      //   fps={12}
-      //   startAt={6}
-      //   endAt={-1}
-      //   direction={'rewind'}
-      //   loop={true}
-      // />
-      // <Spritesheet
-      //   className={styles.sprite}
-      //   style={{width:100, height:100}}
-      //   image={`/lamretta/lamretta-spritesheet.png`}
-      //   widthFrame={260}
-      //   heightFrame={260}
-      //   steps={6}
-      //   fps={12}
-      //   startAt={1}
-      //   endAt={6}
-      //   loop={true}
-      // />
-      // <Spritesheet
-      //   className={styles.sprite}
-      //   style={{width:100, height:100}}
-      //   image={`/seofon/seofon-spritesheet.png`}
-      //   widthFrame={260}
-      //   heightFrame={260}
-      //   steps={6}
-      //   fps={12}
-      //   startAt={1}
-      //   endAt={6}
-      //   loop={true}
-      // />
