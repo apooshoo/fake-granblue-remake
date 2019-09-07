@@ -370,6 +370,7 @@ class Main extends React.Component {
 
         return (
             <React.Fragment>
+                <button onClick={()=>{this.mainMode()}}>back to main</button>
                 <ArtModal
                     showArtModal={this.state.showArtModal}
                     hideArtModal={()=>{this.hideArtModal()}}
