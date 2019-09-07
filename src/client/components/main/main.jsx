@@ -3,7 +3,9 @@ import React from 'react';
 import styles from './style.scss';
 import Spritesheet from 'react-responsive-spritesheet';
 import ArtModal from '../modal/artModal';
-//modes: main, showAll
+import Game from '../game/game';
+//modes: main, showAll, archive, game
+
 class Main extends React.Component {
   constructor() {
     super();
@@ -97,8 +99,8 @@ class Main extends React.Component {
     console.log("State after update:");
     // console.log("allCharacters", this.state.allCharacters);
     // console.log("usersCharacters", this.state.usersCharacters);
-    // console.log("partyList", this.state.partyList)
-    console.log("showartmodal:", this.state.showArtModal)
+    console.log("partyList", this.state.partyList)
+    // console.log("showartmodal:", this.state.showArtModal)
   }
 
   //on selecting character to put into slot
@@ -260,6 +262,11 @@ class Main extends React.Component {
     this.showArtModal();
   }
 
+  gameMode(){
+    console.log('entering game mode!');
+    this.setState({mainState: 'game'})
+  }
+
   render() {
     let allCharacters = this.state.allCharacters;
     let usersCharacters = this.state.usersCharacters;
@@ -337,23 +344,22 @@ class Main extends React.Component {
     } else if (this.state.mainState === 'main'){
         return (
             <React.Fragment>
-            <ArtModal
-                showArtModal={this.state.showArtModal}
-                hideArtModal={()=>{this.hideArtModal()}}
-                displayCharacter={this.state.displayCharacter}
-                />
+                <ArtModal
+                    showArtModal={this.state.showArtModal}
+                    hideArtModal={()=>{this.hideArtModal()}}
+                    displayCharacter={this.state.displayCharacter}
+                    />
 
-            <img className={styles.drawbtn} onClick={()=>{this.draw()}} src="./main/draw.png"/>
-            <button onClick={()=>{this.archiveMode()}}>See All Characters</button>
+                <img className={styles.drawbtn} onClick={()=>{this.draw()}} src="./main/draw.png"/>
+
+                <button onClick={()=>{this.gameMode()}}>PLAY!</button>
+
+                <button onClick={()=>{this.archiveMode()}}>See All Characters</button>
                 <p>Click on thumbnail to swap!</p>
                 <div>
                     {partyList}
                 </div>
 
-
-                <div>
-
-                </div>
             </React.Fragment>
         );
     } else if (this.state.mainState === 'showAll'){
@@ -367,7 +373,6 @@ class Main extends React.Component {
             </React.Fragment>
         );
     } else if (this.state.mainState === 'archive'){
-
         return (
             <React.Fragment>
                 <button onClick={()=>{this.mainMode()}}>back to main</button>
@@ -380,7 +385,13 @@ class Main extends React.Component {
                     {archiveList}
                 </div>
             </React.Fragment>
-        )
+        );
+    } else if (this.state.mainState === 'game'){
+        return(
+            <Game
+                mainMode={()=>{this.mainMode()}}
+            />
+        );
     }
 
 
