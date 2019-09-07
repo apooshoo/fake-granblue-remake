@@ -3,9 +3,18 @@
 	display: inline-block;
 }
 
+.drawbtn{
+	border-radius: 10px;
+}
+
 .listItem{
-	max-height: 200px;
-	max-width: 500px;
+	max-width: 170px;
+	display: inline-block;
+}
+
+.partyThumbnail{
+	max-width: 150px;
+	max-height: auto;
 }
 
 .art{

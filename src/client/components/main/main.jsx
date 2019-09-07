@@ -16,11 +16,6 @@ class Main extends React.Component {
     };
   }
 
-  addCharacter(character){
-    let allCharacters = this.state.characters;
-    console.log('character to add:', character);
-  }
-
   draw(){
     let userId = this.props.userId;
     let allCharacters = [...this.state.allCharacters];
@@ -28,9 +23,10 @@ class Main extends React.Component {
     let randomIndex = Math.floor(Math.random()*allCharacters.length);
     let randomChar = allCharacters[randomIndex];
 
-    let temp = this.state.usersCharacters.filter(char => char.id === randomChar.id)
+    let temp = [...this.state.usersCharacters].filter(char => char.id === randomChar.id)
     if (temp.length > 0){
-        console.log('have already')
+        console.log('have already', temp)
+        return
     } else {
         fetch('/characters/new', {
           method: 'POST',
@@ -93,7 +89,10 @@ class Main extends React.Component {
 
 
   componentDidUpdate(){
-    console.log("State after update:", this.state);
+    console.log("State after update:");
+    console.log("allCharacters", this.state.allCharacters);
+    console.log("usersCharacters", this.state.usersCharacters);
+    console.log("partyList", this.state.partyList)
   }
 
   //on selecting character to put into slot
@@ -236,9 +235,7 @@ class Main extends React.Component {
         charactersList = usersCharacters.map((character, index) => {
             return(
                 <div key={index} className={styles.listItem}>
-                    <h4>Name: {character.name}</h4>
-                    <button onClick={()=>{this.setActive(character)}}>Set Active</button>
-                    <p>Sprite:</p>
+                    <p>{character.name}</p>
                     <Spritesheet
                         className={styles.sprite}
                         style={{width:100, height:100}}
@@ -250,6 +247,7 @@ class Main extends React.Component {
                         startAt={1}
                         endAt={6}
                         loop={true}
+                        onClick={()=>{this.setActive(character)}}
                       />
                 </div>
             )
@@ -258,9 +256,17 @@ class Main extends React.Component {
 
     let partyList = [...this.state.partyList].map((char, index) => {
         if(char === null){
-            return <div key={index} onClick={()=>this.showAllMode(index)}><p>Empty</p></div>
+            return (
+                <div className={styles.listItem} key={index} onClick={()=>this.showAllMode(index)}>
+                    <img className={styles.partyThumbnail} src="./main/empty.png"/>
+                </div>
+            )
         } else {
-            return <div key={index} onClick={()=>this.showAllMode(index)}><p>{char.name}</p></div>
+            return (
+                <div className={styles.listItem} key={index} onClick={()=>this.showAllMode(index)}>
+                    <img className={styles.partyThumbnail} src={char.home_thumbnail}/>
+                </div>
+            )
         }
     });
 
@@ -274,8 +280,8 @@ class Main extends React.Component {
     } else if (this.state.mainState === 'main'){
         return (
             <React.Fragment>
-                <button onClick={()=>{this.draw()}}>big draw button</button>
-                <p>PARTY</p>
+            <img className={styles.drawbtn} onClick={()=>{this.draw()}} src="./main/draw.png"/>
+                <p>Click on thumbnail to swap!</p>
 
                 <div>
                     {partyList}
