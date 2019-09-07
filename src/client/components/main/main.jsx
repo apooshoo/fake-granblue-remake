@@ -2,6 +2,7 @@ import React from 'react';
 // import PropTypes from 'prop-types';
 import styles from './style.scss';
 import Spritesheet from 'react-responsive-spritesheet';
+import ArtModal from '../modal/artModal';
 //modes: main, showAll
 class Main extends React.Component {
   constructor() {
@@ -12,6 +13,8 @@ class Main extends React.Component {
         partyList: [null,null,null],
         setSlot: null,
         mainState: 'main',
+        showArtModal: false,
+        displayCharacter: null,
         requested: false
     };
   }
@@ -41,6 +44,8 @@ class Main extends React.Component {
         }).then(response => response.json())
         .then(response => console.log(response))
         .then(this.setState({usersCharacters: [...this.state.usersCharacters].concat(randomChar)}))
+        .then(this.setDisplayCharacter(randomChar))
+        .then(this.showArtModal());
     };
 
 
@@ -90,9 +95,10 @@ class Main extends React.Component {
 
   componentDidUpdate(){
     console.log("State after update:");
-    console.log("allCharacters", this.state.allCharacters);
-    console.log("usersCharacters", this.state.usersCharacters);
-    console.log("partyList", this.state.partyList)
+    // console.log("allCharacters", this.state.allCharacters);
+    // console.log("usersCharacters", this.state.usersCharacters);
+    // console.log("partyList", this.state.partyList)
+    console.log("showartmodal:", this.state.showArtModal)
   }
 
   //on selecting character to put into slot
@@ -227,6 +233,22 @@ class Main extends React.Component {
     this.setState({mainState: 'main', setSlot: null});
   }
 
+  showArtModal(){
+    console.log('showing art modal');
+    this.setState({showArtModal: true});
+  }
+
+  hideArtModal(){
+    console.log('hiding art modal');
+    //also removes displayCharacter
+    this.setState({showArtModal: false, displayCharacter: null});
+  }
+
+  setDisplayCharacter(character){
+    console.log('setting display character');
+    this.setState({displayCharacter: character});
+  }
+
   render() {
     let allCharacters = this.state.allCharacters;
     let usersCharacters = this.state.usersCharacters;
@@ -280,9 +302,15 @@ class Main extends React.Component {
     } else if (this.state.mainState === 'main'){
         return (
             <React.Fragment>
+            <ArtModal
+                showArtModal={this.state.showArtModal}
+                hideArtModal={()=>{this.hideArtModal()}}
+                displayCharacter={this.state.displayCharacter}
+                />
+
+
             <img className={styles.drawbtn} onClick={()=>{this.draw()}} src="./main/draw.png"/>
                 <p>Click on thumbnail to swap!</p>
-
                 <div>
                     {partyList}
                 </div>
