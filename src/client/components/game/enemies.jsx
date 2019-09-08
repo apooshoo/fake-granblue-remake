@@ -6,24 +6,27 @@ class Enemies extends React.Component {
   constructor() {
     super();
     this.state = {
-        enemies: []
+        enemies: [],
+        laneCoords: []
     }
   }
 
-  generateEnemy(coords){
-    console.log("target coords", coords)
-    let {top, left, ...others} = coords;
+  generateEnemy(){
+    let randomLaneIndex = Math.floor(Math.random()*this.state.laneCoords.length)
+    let randomLaneCoords = this.state.laneCoords[randomLaneIndex]
+    console.log('targeting lane:', randomLaneIndex+1);
+    let {top, left, ...others} = randomLaneCoords;
     let enemy = {
+        active: true,
         top: top,
         left: left
     }
-    console.log('generating enemy:', enemy)
+    console.log('generating enemy:', enemy);
 
     this.setState({enemies: [...this.state.enemies].concat(enemy)})
   }
 
   componentDidMount(){
-    console.log('step2')
     let lanesArr = document.querySelectorAll('.lane')
     // let y = x[0].getBoundingClientRect()
     // console.log(y)
@@ -33,25 +36,34 @@ class Enemies extends React.Component {
         coordsArr.push(coords)
     })
     // .getBoundingClientRect();
-    console.log(coordsArr)
-    this.generateEnemy(coordsArr[0])
+    // console.log(coordsArr)
+    this.setState({laneCoords: coordsArr});
+
+  }
+
+  componentDidUpdate(){
+    console.log("state in enemies:", this.state);
   }
 
   render() {
-    console.log('step1')
     let generateEnemies;
-    if(this.state.enemies.length > 0 && this.state.enemies != undefined){
+    if(this.state.enemies.length > 0){
         generateEnemies = [...this.state.enemies].map((enemy, index) => {
             // return <Enemy key={index} enemy={enemy[index]}/>
              return <p key={index}>enemyhere</p>
         });
     } else {
-        return <p>NO ENEMIES FOUND</p>
+        console.log('no enemies found')
     }
+
+
 
     return(
         <React.Fragment>
-            {generateEnemies}
+            <button onClick={()=>{this.generateEnemy()}}>GENERATE ENEMIES BTN</button>
+            <React.Fragment>
+                {generateEnemies}
+            </React.Fragment>
         </React.Fragment>
 
     );
