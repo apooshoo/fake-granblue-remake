@@ -1,50 +1,18 @@
 import React from 'react';
 
 import styles from './style.scss';
-import Enemies from './game';
+import Enemies from './enemies';
 
 class Game extends React.Component {
   constructor() {
     super();
     this.state = {
-        enemies: []
     }
   }
 
   mainMode(){
     this.props.mainMode();
   }
-
-  generateEnemy(coords){
-    console.log("target coords", coords)
-    let {top, left, ...others} = coords;
-    let enemy = {
-        top: top,
-        left: left
-    }
-    console.log('generating enemy:', enemy)
-
-    this.setState({enemies: [...this.state.enemies].concat(enemy)})
-  }
-
-  componentDidMount(){
-    let lanesArr = document.querySelectorAll('.lane')
-    // let y = x[0].getBoundingClientRect()
-    // console.log(y)
-    let coordsArr = [];
-    [...lanesArr].map(lane => {
-        let coords = lane.getBoundingClientRect();
-        coordsArr.push(coords)
-    })
-    // .getBoundingClientRect();
-    console.log(coordsArr)
-    this.generateEnemy(coordsArr[0])
-  }
-
-  componentDidUpdate(){
-    console.log('game state:', this.state.enemies)
-  }
-
 
   render() {
     let counter = 0;
@@ -92,17 +60,7 @@ class Game extends React.Component {
     })
 
 
-    let generateEnemies;
-    console.log('step1')
-    if(this.state.enemies.length > 0){
-        console.log('step2')
-        generateEnemies = [...this.state.enemies].map((enemy, index) => {
-            // return <Enemy key={index} enemy={enemy[index]}/>
-             return <p key={index} enemy={enemy[index]}>enemyhere</p>
-        });
-    } else {
-        console.log('no enemies')
-    }
+
 
 
     return(
@@ -112,9 +70,9 @@ class Game extends React.Component {
             <div className={styles.lanesContainer}>
                 {generateLanes}
             </div>
-            <div>
-                {generateEnemies}
-            </div>
+            <React.Fragment>
+                <Enemies/>
+            </React.Fragment>
 
 
 
