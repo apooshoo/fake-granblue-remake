@@ -65,6 +65,12 @@ class Enemies extends React.Component {
                 //     transition: all 10s linear;
                 //     transform: translateX(1000px);
                 // }
+  uniKeyCode(event) {
+    var key = event.keyCode;
+    if (key === 81){
+        alert('pressed q')
+    }
+  }
 
   render() {
     let generateEnemies;
@@ -82,6 +88,7 @@ class Enemies extends React.Component {
 
     return(
         <React.Fragment>
+        <input type="text" onKeyDown={(event)=>{this.uniKeyCode(event)}}/>
             <button onClick={()=>{this.generateEnemy()}}>GENERATE ENEMIES BTN</button>
             <React.Fragment>
                 {generateEnemies}
