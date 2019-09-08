@@ -15,11 +15,13 @@ class Enemies extends React.Component {
     let randomLaneIndex = Math.floor(Math.random()*this.state.laneCoords.length)
     let randomLaneCoords = this.state.laneCoords[randomLaneIndex]
     console.log('targeting lane:', randomLaneIndex+1);
-    let {top, left, ...others} = randomLaneCoords;
+    console.log('lane coords:', randomLaneCoords)
+    let {top, left, height, ...others} = randomLaneCoords;
     let enemy = {
         active: true,
         top: top,
-        left: left
+        left: left,
+        height: height
     }
     console.log('generating enemy:', enemy);
 
@@ -28,15 +30,11 @@ class Enemies extends React.Component {
 
   componentDidMount(){
     let lanesArr = document.querySelectorAll('.lane')
-    // let y = x[0].getBoundingClientRect()
-    // console.log(y)
     let coordsArr = [];
     [...lanesArr].map(lane => {
         let coords = lane.getBoundingClientRect();
         coordsArr.push(coords)
     })
-    // .getBoundingClientRect();
-    // console.log(coordsArr)
     this.setState({laneCoords: coordsArr});
 
   }
@@ -49,8 +47,20 @@ class Enemies extends React.Component {
     let generateEnemies;
     if(this.state.enemies.length > 0){
         generateEnemies = [...this.state.enemies].map((enemy, index) => {
-            // return <Enemy key={index} enemy={enemy[index]}/>
-             return <p key={index}>enemyhere</p>
+            let {top, left, height} = enemy;
+            return (
+                <div
+                    key={index}
+                    style={{
+                        position: 'absolute',
+                        top: top,
+                        left: left,
+                        height: height,
+                        width: 100,
+                        backgroundColor:'green'
+                    }}
+                />
+            );
         });
     } else {
         console.log('no enemies found')
