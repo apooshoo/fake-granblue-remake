@@ -24,7 +24,7 @@ class Game extends React.Component {
     let generateCharacterSprites = [...this.props.partyList].map((char, index) => {
         let laneCoords = coordsArr[index];
         console.log(`lane coords of ${index+1}`, laneCoords)
-        let character = <div>
+        let character = <div id={`sprite${index}`}>
                             <Spritesheet
                                 style={{
                                     position: 'absolute',
@@ -42,7 +42,12 @@ class Game extends React.Component {
                                 fps={12}
                                 startAt={1}
                                 endAt={6}
-                                loop={true}
+                                autoplay={false}
+                                // loop={true}
+                                onClick={spritesheet => {
+                                    spritesheet.goToAndPlay(1)
+                                }}
+
                                 />
                             </div>
         console.log("char to generate", character)
@@ -88,7 +93,6 @@ class Game extends React.Component {
                         style={{
                             width:100,
                             height:100,
-
                         }}
                         image={this.props.partyList[0].spritesheet}
                         widthFrame={260}
@@ -98,6 +102,8 @@ class Game extends React.Component {
                         startAt={1}
                         endAt={6}
                         loop={true}
+                        // onLoopComplete={()}
+
                         />
                 </Enemy>
     console.log('generating enemy:', enemy);
@@ -108,63 +114,92 @@ class Game extends React.Component {
 
   }
 
+  characterAttack(charIndex){
+    console.log('making char attack!');
+    // console.log('index of char to animate', charIndex);
+    // console.log('char:', [...this.state.charactersToGenerate][charIndex])
+    // console.log('char info:', [...this.state.charactersToGenerate][charIndex].props.children.props);
+
+    // let attackingChar = [...this.state.charactersToGenerate][charIndex].props.children;
+    console.log("attacking char", attackingChar)
+    console.log(document.getElementById('sprite0'))
+    let attackingChar = document.getElementById('sprite0')
+
+
+    // attackingChar.setAttribute("autoplay",  true);
+    // console.log(attackingChar.autoplay)
+
+    let simulateClick = () => {
+        console.log('simulating click')
+        let click = new MouseEvent('click', {
+            bubbles:true,
+            cancelable:false,
+            view:window
+        });
+        let clicking = !attackingChar.dispatchEvent(click);
+    }
+    simulateClick()
+  }
 
   uniKeyCode(event) {
     let enemies = Array.from(document.getElementById('enemies').children)
-
     // console.log(enemies[0].getBoundingClientRect())
-    // console.log(enemies)
     let range = {
         upper: null,
         lower: null
     }
+
     var key = event.keyCode;
     event.stopImmediatePropagation();
-
     let defineRange = key =>{
         if (key === 81){
             console.log('pressed q');
+            this.characterAttack(0);
             return {
                     upper: 95,
                     lower: 0
-                }
+                };
         } else if (key === 87){
             console.log('pressed w');
+            this.characterAttack(1);
             return {
                     upper: 210,
                     lower: 96
-                }
+                };
         } else if (key === 69){
             console.log('pressed e');
+            this.characterAttack(2);
             return {
                     upper: 350,
                     lower: 211
-                }
+                };
         } else {
             return
-        }
-    }
+        };
+    };
 
-    let upper = defineRange(key).upper;
-    let lower = defineRange(key).lower;
+    let {upper, lower} = defineRange(key);
 
     let filteredEnemiesByY = enemies.filter(enemy => {
-        return (enemy.getBoundingClientRect().y >= lower && enemy.getBoundingClientRect().y < upper) ;
-    })
-    console.log("filteredEnemiesByY", filteredEnemiesByY)
-    //we want the biggest LEFT first
+        return (enemy.getBoundingClientRect().y >= lower && enemy.getBoundingClientRect().y < upper);
+    });
+    // console.log("filteredEnemiesByY", filteredEnemiesByY)
     let sortedEnemiesByX = filteredEnemiesByY.sort((a,b) => {
         return b.getBoundingClientRect().x - a.getBoundingClientRect().x
     });
-
     // sortedEnemiesByX.map(enemy=> {console.log(enemy.getBoundingClientRect())})
 
     //compare vs X, left's 300 is 100 self-width offset and 200 character offset
     let hitboxStart = [...this.state.laneCoords][0].right-300;
-    let hitboxEnd = hitboxStart + 100;
+    let hitboxEnd = [...this.state.laneCoords][0].right-200;
     console.log(hitboxStart)
-    if(sortedEnemiesByX[0].getBoundingClientRect().x >= hitboxStart){
+
+    let attackTarget = sortedEnemiesByX[0];
+    let attackTargetPositionX = attackTarget.getBoundingClientRect().x;
+    if(attackTargetPositionX >= hitboxStart && attackTargetPositionX < hitboxEnd){
         console.log('bullseye!!')
+        attackTarget.style = 'display: none'
+        // console.log(attackTarget)
     } else {
         console.log('miss!')
     }
