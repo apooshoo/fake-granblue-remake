@@ -24,17 +24,16 @@ class Game extends React.Component {
     let generateCharacterSprites = [...this.props.partyList].map((char, index) => {
         let laneCoords = coordsArr[index];
         console.log(`lane coords of ${index+1}`, laneCoords)
-        console.log('top:', laneCoords.top)
         let character = <div>
                             <Spritesheet
                                 style={{
                                     position: 'absolute',
                                     width:100,
                                     height:100,
-                                    top:100,
-                                    right:1100
-                                    // top: laneCoords.top,
-                                    // right: laneCoords.right-100
+                                    // top:100,
+                                    // right:1100
+                                    top: laneCoords.top,
+                                    left: laneCoords.right-100
                                 }}
                                 image={char.spritesheet}
                                 widthFrame={260}
@@ -70,9 +69,9 @@ class Game extends React.Component {
                         left: left,
                         height: height,
                         width: 100,
-                        backgroundColor:'green'
-                        // transform: `translateX(${enemyTransform.x}px)`,
-                        // transition: `transform ${enemyTransform.duration}s`,
+                        backgroundColor:'green',
+                        transform: `translateX(${enemyTransform.x}px)`,
+                        transition: `transform 10s`
                     }}
                 />
     console.log('generating enemy:', enemy);
@@ -184,6 +183,8 @@ class Game extends React.Component {
             return char
         })
     }
+
+    console.log(styles)
 
     return(
         <React.Fragment>
