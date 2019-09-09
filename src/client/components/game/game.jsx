@@ -33,7 +33,7 @@ class Game extends React.Component {
                                     // top:100,
                                     // right:1100
                                     top: laneCoords.top,
-                                    left: laneCoords.right-100
+                                    left: laneCoords.right-200
                                 }}
                                 image={char.spritesheet}
                                 widthFrame={260}
@@ -55,11 +55,12 @@ class Game extends React.Component {
   generateEnemy(){
     let randomLaneIndex = Math.floor(Math.random()*this.state.laneCoords.length)
     let randomLaneCoords = this.state.laneCoords[randomLaneIndex]
+
     console.log('targeting lane:', randomLaneIndex+1);
     console.log('lane coords:', randomLaneCoords)
-    let {top, left, height, ...others} = randomLaneCoords;
+    let {top, left, height, right, ...others} = randomLaneCoords;
     let enemyTransform = {
-        x: 1000,
+        x: right,
         duration: 10
     }
 
@@ -68,7 +69,7 @@ class Game extends React.Component {
             transform: translate(${left}px);
         }
         to {
-            transform: translate(${enemyTransform.x}px);
+            transform: translate(${right-130}px);
         }
     `;
 
@@ -82,18 +83,23 @@ class Game extends React.Component {
         animation: ${moveRight} 5s linear infinite;
     `;
 
-    let enemy = <Enemy
-                    // style={{
-                        // position: 'absolute',
-                        // top: top,
-                        // left: left,
-                        // height: height,
-                        // width: 100,
-                        // backgroundColor:'green',
-                        // transform: `translateX(${enemyTransform.x}px)`,
-                        // transition: `transform 10s`
-                    // }}
-                />
+    let enemy = <Enemy>
+                    <Spritesheet
+                        style={{
+                            width:100,
+                            height:100,
+
+                        }}
+                        image={this.props.partyList[0].spritesheet}
+                        widthFrame={260}
+                        heightFrame={260}
+                        steps={6}
+                        fps={12}
+                        startAt={1}
+                        endAt={6}
+                        loop={true}
+                        />
+                </Enemy>
     console.log('generating enemy:', enemy);
     this.setState({
         enemies: [...this.state.enemies].concat(enemy),
@@ -104,14 +110,63 @@ class Game extends React.Component {
 
 
   uniKeyCode(event) {
+    let enemies = Array.from(document.getElementById('enemies').children)
+
+    // console.log(enemies[0].getBoundingClientRect())
+    // console.log(enemies)
+    let range = {
+        upper: null,
+        lower: null
+    }
     var key = event.keyCode;
     event.stopImmediatePropagation();
-    if (key === 81){
-        console.log('pressed q');
-    } else if (key === 87){
-        console.log('pressed w');
-    } else if (key === 69){
-        console.log('pressed e');
+
+    let defineRange = key =>{
+        if (key === 81){
+            console.log('pressed q');
+            return {
+                    upper: 95,
+                    lower: 0
+                }
+        } else if (key === 87){
+            console.log('pressed w');
+            return {
+                    upper: 210,
+                    lower: 96
+                }
+        } else if (key === 69){
+            console.log('pressed e');
+            return {
+                    upper: 350,
+                    lower: 211
+                }
+        } else {
+            return
+        }
+    }
+
+    let upper = defineRange(key).upper;
+    let lower = defineRange(key).lower;
+
+    let filteredEnemiesByY = enemies.filter(enemy => {
+        return (enemy.getBoundingClientRect().y >= lower && enemy.getBoundingClientRect().y < upper) ;
+    })
+    console.log("filteredEnemiesByY", filteredEnemiesByY)
+    //we want the biggest LEFT first
+    let sortedEnemiesByX = filteredEnemiesByY.sort((a,b) => {
+        return b.getBoundingClientRect().x - a.getBoundingClientRect().x
+    });
+
+    // sortedEnemiesByX.map(enemy=> {console.log(enemy.getBoundingClientRect())})
+
+    //compare vs X, left's 300 is 100 self-width offset and 200 character offset
+    let hitboxStart = [...this.state.laneCoords][0].right-300;
+    let hitboxEnd = hitboxStart + 100;
+    console.log(hitboxStart)
+    if(sortedEnemiesByX[0].getBoundingClientRect().x >= hitboxStart){
+        console.log('bullseye!!')
+    } else {
+        console.log('miss!')
     }
   }
 
@@ -185,7 +240,7 @@ class Game extends React.Component {
     let enemiesToGenerate = [...this.state.enemies]
     if(enemiesToGenerate.length > 0){
         returnEnemies = enemiesToGenerate.map(enemy => {
-            console.log('returning', enemy)
+            // console.log('returning', enemy)
             return enemy
 
         });
@@ -215,9 +270,9 @@ class Game extends React.Component {
 
             </div>
             <button onClick={()=>{this.generateEnemy()}}>GENERATE ENEMIES BTN</button>
-            <React.Fragment>
+            <div id="enemies">
                 {returnEnemies}
-            </React.Fragment>
+            </div>
             <React.Fragment>
                 {generateCharacters}
             </React.Fragment>
