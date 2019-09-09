@@ -96,7 +96,7 @@ class Main extends React.Component {
 
 
   componentDidUpdate(){
-    console.log("State after update:");
+    // console.log("State after update:");
     // console.log("allCharacters", this.state.allCharacters);
     // console.log("usersCharacters", this.state.usersCharacters);
     // console.log("partyList", this.state.partyList)
