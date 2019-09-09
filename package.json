@@ -88,6 +88,7 @@
     "react-responsive-spritesheet": "^2.3.9",
     "request": "^2.88.0",
     "sanitize.css": ">=8.0.0",
+    "styled-components": "^5.0.0-beta.8",
     "webpack": "^4.29.4",
     "webpack-dev-middleware": ">=3.5.2",
     "webpack-hot-middleware": ">=2.24.3",

@@ -1,6 +1,6 @@
 import React from 'react';
 import Spritesheet from 'react-responsive-spritesheet';
-
+import styled, {keyframes} from 'styled-components';
 import styles from './style.scss';
 import Enemies from './enemies';
 
@@ -62,17 +62,37 @@ class Game extends React.Component {
         x: 1000,
         duration: 10
     }
-    let enemy = <div
-                    style={{
-                        position: 'absolute',
-                        top: top,
-                        left: left,
-                        height: height,
-                        width: 100,
-                        backgroundColor:'green',
-                        transform: `translateX(${enemyTransform.x}px)`,
-                        transition: `transform 10s`
-                    }}
+
+    const moveRight = keyframes`
+        from {
+            transform: translate(${left}px);
+        }
+        to {
+            transform: translate(${enemyTransform.x}px);
+        }
+    `;
+
+    const Enemy = styled.div`
+        position: absolute;
+        top: ${top}px;
+        left: ${left}px;
+        height: ${height}px;
+        width: 100px;
+        background-color: green;
+        animation: ${moveRight} 5s linear infinite;
+    `;
+
+    let enemy = <Enemy
+                    // style={{
+                        // position: 'absolute',
+                        // top: top,
+                        // left: left,
+                        // height: height,
+                        // width: 100,
+                        // backgroundColor:'green',
+                        // transform: `translateX(${enemyTransform.x}px)`,
+                        // transition: `transform 10s`
+                    // }}
                 />
     console.log('generating enemy:', enemy);
     this.setState({
