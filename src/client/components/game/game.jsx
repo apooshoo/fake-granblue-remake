@@ -37,37 +37,9 @@ class Game extends React.Component {
                 top: ${laneCoords.top}px;
                 left: ${laneCoords.right-200}px;
                 background: url('${char.spritesheet}') right center;
-                animation: ${attack} .6s steps(6) infinite;
+                animation: ${attack} .6s steps(6);
                 background-size: cover;
-
             `;
-
-        // let character = <div id={`sprite${index}`}>
-        //                     <Spritesheet
-        //                         style={{
-        //                             position: 'absolute',
-        //                             width:100,
-        //                             height:100,
-        //                             // top:100,
-        //                             // right:1100
-        //                             top: laneCoords.top,
-        //                             left: laneCoords.right-200
-        //                         }}
-        //                         image={char.spritesheet}
-        //                         widthFrame={260}
-        //                         heightFrame={260}
-        //                         steps={6}
-        //                         fps={12}
-        //                         startAt={1}
-        //                         endAt={6}
-        //                         autoplay={false}
-        //                         // loop={true}
-        //                         onClick={spritesheet => {
-        //                             spritesheet.goToAndPlay(1)
-        //                         }}
-
-        //                         />
-        //                     </div>
         let character = <Character>
 
                         </Character>
@@ -139,30 +111,67 @@ class Game extends React.Component {
     console.log('making char attack!');
     // console.log('index of char to animate', charIndex);
     // console.log('char:', [...this.state.charactersToGenerate][charIndex])
-    // console.log('char info:', [...this.state.charactersToGenerate][charIndex].props.children.props);
+    let characterStats = [...this.props.partyList][charIndex];
+    console.log(characterStats)
+    let laneCoords = this.state.laneCoords[charIndex];
+    console.log(laneCoords)
 
-    // let attackingChar = [...this.state.charactersToGenerate][charIndex].props.children;
-    console.log("attacking char", attackingChar)
-    console.log(document.getElementById('sprite0'))
-    let attackingChar = document.getElementById('sprite0')
+    const attack = keyframes`
+        0%  {background-position-x: 0px}
+        100%{background-position-x: -600px;}
+    `;
+    const Character = styled.div`
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        top: ${laneCoords.top}px;
+        left: ${laneCoords.right-200}px;
+        background: url('${characterStats.spritesheet}') right center;
+        animation: ${attack} .6s steps(6);
+        background-size: cover;
+    `;
+    let character = <Character/>
+    console.log(character)
+
+    //insert
+    let wrapper = document.getElementById('characters').children
+    console.log(wrapper)
+
+    let oldChild = wrapper[charIndex];
+    console.log(oldChild)
+
+    wrapper.replace(oldChild, character)
+    console.log('new wrapper', wrapper)
+
+    // this.setState({
+    //     charactersToGenerate: [...this.state.charactersToGenerate].splice(charIndex, 1)
+    // });
+    // console.log(this.state.charactersToGenerate)
+    // this.setState({
+    //     charactersToGenerate: [...this.state.charactersToGenerate].insert(charIndex, character)
+    // });
+    //     console.log(this.state.charactersToGenerate)
+
+
 
 
     // attackingChar.setAttribute("autoplay",  true);
     // console.log(attackingChar.autoplay)
 
-    let simulateClick = () => {
-        console.log('simulating click')
-        let click = new MouseEvent('click', {
-            bubbles:true,
-            cancelable:false,
-            view:window
-        });
-        let clicking = !attackingChar.dispatchEvent(click);
-    }
-    simulateClick()
+    // let simulateClick = () => {
+    //     console.log('simulating click')
+    //     let click = new MouseEvent('click', {
+    //         bubbles:true,
+    //         cancelable:false,
+    //         view:window
+    //     });
+    //     let clicking = !attackingChar.dispatchEvent(click);
+    // }
+    // simulateClick()
   }
 
   uniKeyCode(event) {
+    event.stopImmediatePropagation();
     let enemies = Array.from(document.getElementById('enemies').children)
     // console.log(enemies[0].getBoundingClientRect())
     let range = {
@@ -171,59 +180,73 @@ class Game extends React.Component {
     }
 
     var key = event.keyCode;
-    event.stopImmediatePropagation();
-    let defineRange = key =>{
-        if (key === 81){
-            console.log('pressed q');
-            this.characterAttack(0);
-            return {
-                    upper: 95,
-                    lower: 0
-                };
-        } else if (key === 87){
-            console.log('pressed w');
-            this.characterAttack(1);
-            return {
-                    upper: 210,
-                    lower: 96
-                };
-        } else if (key === 69){
-            console.log('pressed e');
-            this.characterAttack(2);
-            return {
-                    upper: 350,
-                    lower: 211
-                };
-        } else {
-            return
-        };
+    if (key === 81){
+        console.log('pressed q');
+        this.characterAttack(0);
+        range = {
+                upper: 95,
+                lower: 0
+            };
+    } else if (key === 87){
+        console.log('pressed w');
+        this.characterAttack(1);
+        range = {
+                upper: 210,
+                lower: 96
+            };
+    } else if (key === 69){
+        console.log('pressed e');
+        this.characterAttack(2);
+        range = {
+                upper: 350,
+                lower: 211
+            };
+    } else {
+        return
     };
 
-    let {upper, lower} = defineRange(key);
+    let upper = range.upper;
+    let lower = range.lower;
 
-    let filteredEnemiesByY = enemies.filter(enemy => {
-        return (enemy.getBoundingClientRect().y >= lower && enemy.getBoundingClientRect().y < upper);
-    });
+    let filteredEnemiesByY;
+    let sortedEnemiesByX;
+    if(enemies != undefined){
+        filteredEnemiesByY = enemies.filter(enemy => {
+            return (enemy.getBoundingClientRect().y >= lower && enemy.getBoundingClientRect().y < upper);
+        });
+
+        if(filteredEnemiesByY != undefined){
+            sortedEnemiesByX = filteredEnemiesByY.sort((a,b) => {
+                return b.getBoundingClientRect().x - a.getBoundingClientRect().x
+            });
+        };
+
+        let hitboxStart = [...this.state.laneCoords][0].right-300;
+        let hitboxEnd = [...this.state.laneCoords][0].right-200;
+        console.log(hitboxStart)
+
+        let attackTarget = sortedEnemiesByX[0];
+        let attackTargetPositionX = attackTarget.getBoundingClientRect().x;
+        if(attackTargetPositionX >= hitboxStart && attackTargetPositionX < hitboxEnd){
+            console.log('bullseye!!')
+            attackTarget.style = 'display: none'
+            // console.log(attackTarget)
+        } else {
+            console.log('miss!')
+        };
+
+    } else {
+        return;
+    }
+
     // console.log("filteredEnemiesByY", filteredEnemiesByY)
-    let sortedEnemiesByX = filteredEnemiesByY.sort((a,b) => {
-        return b.getBoundingClientRect().x - a.getBoundingClientRect().x
-    });
+
     // sortedEnemiesByX.map(enemy=> {console.log(enemy.getBoundingClientRect())})
 
     //compare vs X, left's 300 is 100 self-width offset and 200 character offset
-    let hitboxStart = [...this.state.laneCoords][0].right-300;
-    let hitboxEnd = [...this.state.laneCoords][0].right-200;
-    console.log(hitboxStart)
 
-    let attackTarget = sortedEnemiesByX[0];
-    let attackTargetPositionX = attackTarget.getBoundingClientRect().x;
-    if(attackTargetPositionX >= hitboxStart && attackTargetPositionX < hitboxEnd){
-        console.log('bullseye!!')
-        attackTarget.style = 'display: none'
-        // console.log(attackTarget)
-    } else {
-        console.log('miss!')
-    }
+
+
   }
 
 
@@ -329,9 +352,9 @@ class Game extends React.Component {
             <div id="enemies">
                 {returnEnemies}
             </div>
-            <React.Fragment>
+            <div id="characters">
                 {generateCharacters}
-            </React.Fragment>
+            </div>
 
 
 
