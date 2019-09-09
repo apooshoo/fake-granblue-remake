@@ -19,37 +19,58 @@ class Game extends React.Component {
     this.props.mainMode();
   }
 
+
+
   generateCharacterSprites(coordsArr){
     console.log('generating char sprite')
     let generateCharacterSprites = [...this.props.partyList].map((char, index) => {
         let laneCoords = coordsArr[index];
         console.log(`lane coords of ${index+1}`, laneCoords)
-        let character = <div id={`sprite${index}`}>
-                            <Spritesheet
-                                style={{
-                                    position: 'absolute',
-                                    width:100,
-                                    height:100,
-                                    // top:100,
-                                    // right:1100
-                                    top: laneCoords.top,
-                                    left: laneCoords.right-200
-                                }}
-                                image={char.spritesheet}
-                                widthFrame={260}
-                                heightFrame={260}
-                                steps={6}
-                                fps={12}
-                                startAt={1}
-                                endAt={6}
-                                autoplay={false}
-                                // loop={true}
-                                onClick={spritesheet => {
-                                    spritesheet.goToAndPlay(1)
-                                }}
+            const attack = keyframes`
+                0%  {background-position-x: 0px}
+                100%{background-position-x: -600px;}
+            `;
+            const Character = styled.div`
+                position: absolute;
+                width: 100px;
+                height: 100px;
+                top: ${laneCoords.top}px;
+                left: ${laneCoords.right-200}px;
+                background: url('${char.spritesheet}') right center;
+                animation: ${attack} .6s steps(6) infinite;
+                background-size: cover;
 
-                                />
-                            </div>
+            `;
+
+        // let character = <div id={`sprite${index}`}>
+        //                     <Spritesheet
+        //                         style={{
+        //                             position: 'absolute',
+        //                             width:100,
+        //                             height:100,
+        //                             // top:100,
+        //                             // right:1100
+        //                             top: laneCoords.top,
+        //                             left: laneCoords.right-200
+        //                         }}
+        //                         image={char.spritesheet}
+        //                         widthFrame={260}
+        //                         heightFrame={260}
+        //                         steps={6}
+        //                         fps={12}
+        //                         startAt={1}
+        //                         endAt={6}
+        //                         autoplay={false}
+        //                         // loop={true}
+        //                         onClick={spritesheet => {
+        //                             spritesheet.goToAndPlay(1)
+        //                         }}
+
+        //                         />
+        //                     </div>
+        let character = <Character>
+
+                        </Character>
         console.log("char to generate", character)
         return character
     });
