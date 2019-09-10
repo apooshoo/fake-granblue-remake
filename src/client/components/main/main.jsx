@@ -18,7 +18,8 @@ class Main extends React.Component {
         showArtModal: false,
         selectedChar: null,
         displayCharacter: null,
-        requested: false
+        timer: 10,
+        difficulty: 'Easy'
     };
   }
 
@@ -270,6 +271,16 @@ class Main extends React.Component {
     this.setState({mainState: 'game'})
   }
 
+  changeDifficulty(){
+    console.log('changing difficulty');
+    this.setState({difficulty: event.target.value});
+  }
+
+  changeTimer(){
+    console.log('changing difficulty');
+    this.setState({timer: parseInt(event.target.value)});
+  }
+
   render() {
     let allCharacters = this.state.allCharacters;
     let usersCharacters = this.state.usersCharacters;
@@ -371,6 +382,17 @@ class Main extends React.Component {
                     <button className={styles.drawbtn} style={{backgroundImage: "url('./main/draw-scrubbed.png')"}} onClick={()=>{this.gameMode()}}>
                     PLAY
                     </button>
+                    <select value={this.state.difficulty} onChange={()=>{this.changeDifficulty()}}>
+                        <option value="Easy">Easy</option>
+                        <option value="Hard">Hard</option>
+                        <option value="Lethal">Lethal</option>
+                    </select>
+                    <select value={this.state.timer} onChange={()=>{this.changeTimer()}}>
+                        <option value={10}>10s</option>
+                        <option value={20}>20s</option>
+                    </select>
+
+
 
                     <button className={styles.drawbtn} style={{backgroundImage: "url('./main/draw-scrubbed.png')"}} onClick={()=>{this.archiveMode()}}>
                     ARCHIVE
@@ -447,6 +469,8 @@ class Main extends React.Component {
                 mainMode={()=>{this.mainMode()}}
                 mainState={this.state.mainState}
                 partyList={this.state.partyList}
+                timer={this.state.timer}
+                difficulty={this.state.difficulty}
             />
         );
     }

@@ -13,7 +13,8 @@ class Game extends React.Component {
         enemiesTransform: [],
         enemies: [],
         laneCoords: [],
-        keepCheckingEnemyPassed: null
+        keepCheckingEnemyPassed: null,
+
     }
   }
 
@@ -106,40 +107,31 @@ class Game extends React.Component {
     }
 
     const moveRight = keyframes`
-        from {
-            transform: translate(${left}px);
-        }
-        to {
-            transform: translate(${right-130}px);
-        }
+        from {transform: translate(${left}px);}
+        to {transform: translate(${right-130}px);}
     `;
 
-    const Enemy = styled.div`
+    let difficulty;
+    if(this.props.difficulty === 'Easy'){
+        difficulty = 4;
+    } else if (this.props.difficulty === 'Hard'){
+        difficulty = 2;
+    } else if (this.props.difficulty === 'Lethal'){
+        difficulty = 1;
+    };
+
+    let Enemy = styled.div`
         position: absolute;
         top: ${top}px;
         left: ${left}px;
         height: ${height}px;
         width: 100px;
         background-color: green;
-        animation: ${moveRight} 5s linear infinite;
+        animation: ${moveRight} ${difficulty}s linear infinite;
     `;
 
     let enemy = <Enemy>
-                    <Spritesheet
-                        style={{
-                            width:100,
-                            height:100,
-                        }}
-                        image={this.props.partyList[0].spritesheet}
-                        widthFrame={260}
-                        heightFrame={260}
-                        steps={6}
-                        fps={12}
-                        startAt={1}
-                        endAt={6}
-                        loop={true}
-
-                        />
+                    <Spritesheet style={{width:100, height:100,}} image={this.props.partyList[0].spritesheet} widthFrame={260} heightFrame={260} steps={6} fps={12} startAt={1} endAt={6} loop={true}/>
                 </Enemy>
     // console.log('generating enemy:', enemy);
     this.setState({
@@ -403,12 +395,13 @@ class Game extends React.Component {
         });
     };
 
-    // var startCheckEnemyPassed = setInterval(()=>this.checkEnemyPassed(), 100);
+    // console.log('YOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO')
+    // console.log(this.props.timer)
+    // console.log(this.props.difficulty)
 
 
     return(
         <React.Fragment>
-            <button onClick={()=>{this.checkEnemyPassed()}}>CHECK ENEMY PASSED</button>
             <button onClick={()=>{this.generateEnemy()}}>GENERATE ENEMIES BTN</button>
             <button onClick={()=>{this.mainMode()}}>back to main</button>
             <p>GAME MODE</p>
