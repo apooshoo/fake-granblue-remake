@@ -281,6 +281,12 @@ class Main extends React.Component {
     this.setState({timer: parseInt(event.target.value)});
   }
 
+  countdown(){
+    console.log('counting down')
+    console.log(this.state.timer)
+    this.setState({timer: this.state.timer -1})
+  }
+
   render() {
     let allCharacters = this.state.allCharacters;
     let usersCharacters = this.state.usersCharacters;
@@ -452,21 +458,13 @@ class Main extends React.Component {
 
 
 
-
-
-
-
-
-
-
-
-
             </React.Fragment>
         );
     } else if (this.state.mainState === 'game'){
         return(
             <Game
                 mainMode={()=>{this.mainMode()}}
+                countdown={()=>{this.countdown()}}
                 mainState={this.state.mainState}
                 partyList={this.state.partyList}
                 timer={this.state.timer}

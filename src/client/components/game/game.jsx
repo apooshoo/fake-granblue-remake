@@ -14,6 +14,7 @@ class Game extends React.Component {
         enemies: [],
         laneCoords: [],
         keepCheckingEnemyPassed: null,
+        keepCountingDown: null,
 
     }
   }
@@ -292,9 +293,15 @@ class Game extends React.Component {
 
   }
 
-
+  countdown(){
+    this.props.countdown();
+    if(this.props.timer <= 0){
+        clearInterval
+    }
+  }
 
   componentDidMount(){
+    this.setState({timer: this.props.timer})
     let lanesArr = document.querySelectorAll('.lane')
     let coordsArr = [];
     [...lanesArr].map(lane => {
@@ -306,13 +313,17 @@ class Game extends React.Component {
     this.generateCharacterPortraits(coordsArr);
     this.setState({laneCoords: coordsArr});
 
+
+    var keepCountingDown = setInterval(()=>this.countdown(), 1000);
     var keepCheckingEnemyPassed = setInterval(()=>this.checkEnemyPassed(), 100);
     this.setState({keepCheckingEnemyPassed: keepCheckingEnemyPassed});
   }
 
   componentDidUpdate(){
     // console.log("state in enemies:", this.state);
-
+    if(this.props.timer === 0){
+        clearInterval(keepCountingDown)
+    }
   }
 
   componentWillUnmount(){
