@@ -11,14 +11,14 @@ class Game extends React.Component {
         charactersToGenerate: [],
         enemiesTransform: [],
         enemies: [],
-        laneCoords: []
+        laneCoords: [],
+        keepCheckingEnemyPassed: null
     }
   }
 
   mainMode(){
     this.props.mainMode();
   }
-
 
 
   generateCharacterSprites(coordsArr){
@@ -175,8 +175,8 @@ class Game extends React.Component {
   uniKeyCode(event) {
     event.stopImmediatePropagation();
     let enemies = Array.from(document.getElementById('enemies').children)
-    console.log(this.state.laneCoords)
-    console.log(enemies[0].getBoundingClientRect())
+    // console.log(this.state.laneCoords)
+    // console.log(enemies[0].getBoundingClientRect())
     let range = {
         upper: null,
         lower: null
@@ -246,6 +246,50 @@ class Game extends React.Component {
     //compare vs X, left's 300 is 100 self-width offset and 200 character offset
   }
 
+  checkEnemyPassed(){
+    let enemies = Array.from(document.getElementById('enemies').children)
+
+
+    if (enemies !== undefined || enemies.length > 0 || this.state.laneCoords !== undefined){
+        // console.log("THIS", this.state.laneCoords)
+        let range0 = {upper: 127, lower: 0};
+        let range1 = {upper: 237, lower: 128};
+        let range2 = {upper: 360, lower: 248};
+
+        let filteredEnemiesByX;
+        let enemyGoalStart = this.state.laneCoords[0].right-200;
+
+        filteredEnemiesByX = enemies.filter(enemy => {
+            return enemy.getBoundingClientRect().x > enemyGoalStart;
+        });
+        // console.log("filteredEnemiesByX", filteredEnemiesByX)
+
+
+        if(filteredEnemiesByX.length > 0){
+            let enemyPassed = filteredEnemiesByX[0];
+            let enemyLaneCoords = enemyPassed.getBoundingClientRect().y;
+            // console.log("enemy that passed:", enemyPassed)
+            // console.log(enemyLaneCoords);
+
+            let laneIndex;
+            if(enemyLaneCoords > 0 && enemyLaneCoords < 127){
+                laneIndex = 0;
+            } else if (enemyLaneCoords > 238 && enemyLaneCoords < 237){
+                laneIndex = 1;
+            } else if (enemyLaneCoords > 248 && enemyLaneCoords < 360){
+                laneIndex = 2;
+            };
+
+            enemyPassed.style = 'display: none';
+            console.log("enemy passed in lane", laneIndex+1);
+        };
+    } else {
+        return;
+    };
+
+  }
+
+
 
   componentDidMount(){
     let lanesArr = document.querySelectorAll('.lane')
@@ -258,11 +302,17 @@ class Game extends React.Component {
     this.generateCharacterSprites(coordsArr);
     this.setState({laneCoords: coordsArr});
 
+    var keepCheckingEnemyPassed = setInterval(()=>this.checkEnemyPassed(), 100);
+    this.setState({keepCheckingEnemyPassed: keepCheckingEnemyPassed});
   }
 
   componentDidUpdate(){
     console.log("state in enemies:", this.state);
 
+  }
+
+  componentWillUnmount(){
+    clearInterval(this.state.keepCheckingEnemyPassed);
   }
 
 
@@ -335,9 +385,12 @@ class Game extends React.Component {
         })
     }
 
+    // var startCheckEnemyPassed = setInterval(()=>this.checkEnemyPassed(), 100);
+
 
     return(
         <React.Fragment>
+            <button onClick={()=>{this.checkEnemyPassed()}}>CHECK ENEMY PASSED</button>
             <button onClick={()=>{this.generateEnemy()}}>GENERATE ENEMIES BTN</button>
             <button onClick={()=>{this.mainMode()}}>back to main</button>
             <p>GAME MODE</p>

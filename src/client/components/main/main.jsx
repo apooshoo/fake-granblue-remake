@@ -22,6 +22,8 @@ class Main extends React.Component {
     };
   }
 
+
+
   draw(){
     let userId = this.props.userId;
     let allCharacters = [...this.state.allCharacters];
@@ -443,6 +445,7 @@ class Main extends React.Component {
         return(
             <Game
                 mainMode={()=>{this.mainMode()}}
+                mainState={this.state.mainState}
                 partyList={this.state.partyList}
             />
         );
