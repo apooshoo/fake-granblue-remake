@@ -94,7 +94,6 @@ class Game extends React.Component {
                         startAt={1}
                         endAt={6}
                         loop={true}
-                        // onLoopComplete={()}
 
                         />
                 </Enemy>
@@ -176,7 +175,8 @@ class Game extends React.Component {
   uniKeyCode(event) {
     event.stopImmediatePropagation();
     let enemies = Array.from(document.getElementById('enemies').children)
-    // console.log(enemies[0].getBoundingClientRect())
+    console.log(this.state.laneCoords)
+    console.log(enemies[0].getBoundingClientRect())
     let range = {
         upper: null,
         lower: null
@@ -187,22 +187,22 @@ class Game extends React.Component {
         console.log('pressed q');
         this.characterAttack(0);
         range = {
-                upper: 95,
+                upper: 127,
                 lower: 0
             };
     } else if (key === 87){
         console.log('pressed w');
         this.characterAttack(1);
         range = {
-                upper: 210,
-                lower: 96
+                upper: 237,
+                lower: 128
             };
     } else if (key === 69){
         console.log('pressed e');
         this.characterAttack(2);
         range = {
-                upper: 350,
-                lower: 211
+                upper: 360,
+                lower: 248
             };
     } else {
         return
@@ -338,13 +338,13 @@ class Game extends React.Component {
 
     return(
         <React.Fragment>
+            <button onClick={()=>{this.generateEnemy()}}>GENERATE ENEMIES BTN</button>
             <button onClick={()=>{this.mainMode()}}>back to main</button>
             <p>GAME MODE</p>
             <div className={styles.lanesContainer}>
                 {generateLanes}
 
             </div>
-            <button onClick={()=>{this.generateEnemy()}}>GENERATE ENEMIES BTN</button>
             <div id="enemies">
                 {returnEnemies}
             </div>
