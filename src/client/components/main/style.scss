@@ -1,27 +1,4 @@
 
-.sprite{
-	display: inline-block;
-}
-
-.drawbtn{
-	border-radius: 10px;
-}
-
-.listItem{
-	max-width: 170px;
-	display: inline-block;
-}
-
-.selectedItem{
-	max-width: 170px;
-	display: inline-block;
-}
-
-.partyThumbnail{
-	max-width: 150px;
-	max-height: auto;
-}
-
 .art{
 	max-width: 300px;
 	max-height: auto;
@@ -30,4 +7,52 @@
 .showAllWrapper{
 	display: inline-block;
 	margin-left: 20px;
+}
+
+
+.leftColumn {
+  float: left;
+  width: 50%;
+}
+
+.partyWrapper{
+	display:inline-block;
+	margin: 0 auto;
+}
+
+.listItem{
+	max-width: 170px;
+	display: inline-block;
+}
+
+
+.partyThumbnail{
+	max-width: 150px;
+	max-height: auto;
+}
+
+
+.selectedItem{
+	max-width: 170px;
+	display: inline-block;
+}
+
+
+
+.sprite{
+	display: inline-block;
+}
+
+.rightColumn {
+
+}
+
+.drawbtn{
+	border-radius: 10px;
+	width:187px;
+	height:77px;
+	color:white;
+	font-size: 24px;
+	font-weight: bold;
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }

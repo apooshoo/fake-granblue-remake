@@ -228,8 +228,7 @@ class Main extends React.Component {
   showAllMode(index, char){
     console.log('changing to showall mode');
     let slot = index + 1;
-
-    this.setState({mainState: 'showAll', setSlot: slot, selectedChar: char});
+    this.setState({selectedChar: char, mainState: 'showAll', setSlot: slot});
   }
 
   mainMode(){
@@ -354,45 +353,90 @@ class Main extends React.Component {
                     showArtModal={this.state.showArtModal}
                     hideArtModal={()=>{this.hideArtModal()}}
                     displayCharacter={this.state.displayCharacter}
-                    />
-
-                <img className={styles.drawbtn} onClick={()=>{this.draw()}} src="./main/draw.png"/>
-
-                <button onClick={()=>{this.gameMode()}}>PLAY!</button>
-
-                <button onClick={()=>{this.archiveMode()}}>See All Characters</button>
-                <p>Click on thumbnail to swap!</p>
-                <div>
-                    {partyList}
+                />
+                <div className={styles.leftColumn}>
+                    <p>Click on thumbnail to swap!</p>
+                    <div className={styles.partyWrapper}>
+                        {partyList}
+                    </div>
                 </div>
 
+                <div className={styles.rightColumn}>
+                    <button className={styles.drawbtn} style={{backgroundImage: "url('./main/draw-scrubbed.png')"}} onClick={()=>{this.draw()}}>
+                    DRAW
+                    </button>
+
+                    <button className={styles.drawbtn} style={{backgroundImage: "url('./main/draw-scrubbed.png')"}} onClick={()=>{this.gameMode()}}>
+                    PLAY
+                    </button>
+
+                    <button className={styles.drawbtn} style={{backgroundImage: "url('./main/draw-scrubbed.png')"}} onClick={()=>{this.archiveMode()}}>
+                    ARCHIVE
+                    </button>
+                </div>
             </React.Fragment>
         );
     } else if (this.state.mainState === 'showAll'){
+        let selectedChar = () => {
+            console.log(this.state.selectedChar)
+            if(this.state.selectedChar === null){
+                return <img className={styles.partyThumbnail} src="./main/empty.png"/>
+            } else {
+                return <img className={styles.partyThumbnail} src={this.state.selectedChar.home_thumbnail}/>
+            };
+        };
+
+
         return (
             <React.Fragment>
-                <button onClick={()=>{this.mainMode()}}>back to main</button>
-                <p>SELECT CHAR TO INSERT</p>
-                <div className={styles.selectedItem} onClick={()=>{this.mainMode()}}>
-                    <img className={styles.partyThumbnail} src={this.state.selectedChar.home_thumbnail}/>
+                <div className={styles.leftColumn} style={{width: '80%'}}>
+                    <p>SELECT CHAR TO INSERT</p>
+                    <div className={styles.selectedItem} onClick={()=>{this.mainMode()}}>
+                        {selectedChar()}
+                    </div>
+                    <div className={styles.showAllWrapper}>
+                        {charactersList}
+                    </div>
                 </div>
-                <div className={styles.showAllWrapper}>
-                    {charactersList}
+
+                <div className={styles.rightColumn}>
+                    <button className={styles.drawbtn} style={{backgroundImage: "url('./main/draw-scrubbed.png')"}} onClick={()=>{this.mainMode()}}>HOME</button>
                 </div>
+
             </React.Fragment>
         );
     } else if (this.state.mainState === 'archive'){
         return (
             <React.Fragment>
-                <button onClick={()=>{this.mainMode()}}>back to main</button>
                 <ArtModal
                     showArtModal={this.state.showArtModal}
                     hideArtModal={()=>{this.hideArtModal()}}
                     displayCharacter={this.state.displayCharacter}
-                    />
-                <div>
-                    {archiveList}
+                />
+
+
+
+                <div className={styles.leftColumn} style={{width: '80%'}}>
+                    <div>
+                        {archiveList}
+                    </div>
                 </div>
+
+                <div className={styles.rightColumn}>
+                    <button className={styles.drawbtn} style={{backgroundImage: "url('./main/draw-scrubbed.png')"}} onClick={()=>{this.mainMode()}}>HOME</button>
+                </div>
+
+
+
+
+
+
+
+
+
+
+
+
             </React.Fragment>
         );
     } else if (this.state.mainState === 'game'){
