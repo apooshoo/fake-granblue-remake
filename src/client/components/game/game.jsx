@@ -37,7 +37,6 @@ class Game extends React.Component {
                 top: ${laneCoords.top}px;
                 left: ${laneCoords.right-200}px;
                 background: url('${char.spritesheet}') right center;
-                animation: ${attack} .5s steps(6);
                 background-size: cover;
             `;
         let character = <Character>
@@ -242,15 +241,9 @@ class Game extends React.Component {
     } else {
         return;
     }
-
     // console.log("filteredEnemiesByY", filteredEnemiesByY)
-
     // sortedEnemiesByX.map(enemy=> {console.log(enemy.getBoundingClientRect())})
-
     //compare vs X, left's 300 is 100 self-width offset and 200 character offset
-
-
-
   }
 
 

@@ -12,6 +12,11 @@
 	display: inline-block;
 }
 
+.selectedItem{
+	max-width: 170px;
+	display: inline-block;
+}
+
 .partyThumbnail{
 	max-width: 150px;
 	max-height: auto;
@@ -20,4 +25,9 @@
 .art{
 	max-width: 300px;
 	max-height: auto;
+}
+
+.showAllWrapper{
+	display: inline-block;
+	margin-left: 20px;
 }

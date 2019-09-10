@@ -16,6 +16,7 @@ class Main extends React.Component {
         setSlot: null,
         mainState: 'main',
         showArtModal: false,
+        selectedChar: null,
         displayCharacter: null,
         requested: false
     };
@@ -224,15 +225,16 @@ class Main extends React.Component {
   }
 
   //on click on party thumbnail, saves slot being clicked on
-  showAllMode(index){
+  showAllMode(index, char){
     console.log('changing to showall mode');
     let slot = index + 1;
-    this.setState({mainState: 'showAll', setSlot: slot});
+
+    this.setState({mainState: 'showAll', setSlot: slot, selectedChar: char});
   }
 
   mainMode(){
     console.log('changing to main mode');
-    this.setState({mainState: 'main', setSlot: null});
+    this.setState({mainState: 'main', setSlot: null, selectedChar: null});
   }
 
   archiveMode(){
@@ -321,18 +323,22 @@ class Main extends React.Component {
     let partyList = [...this.state.partyList].map((char, index) => {
         if(char === null){
             return (
-                <div className={styles.listItem} key={index} onClick={()=>this.showAllMode(index)}>
+                <div className={styles.listItem} key={index} onClick={()=>this.showAllMode(index, char)}>
                     <img className={styles.partyThumbnail} src="./main/empty.png"/>
                 </div>
             )
         } else {
             return (
-                <div className={styles.listItem} key={index} onClick={()=>this.showAllMode(index)}>
+                <div className={styles.listItem} key={index} onClick={()=>this.showAllMode(index, char)}>
                     <img className={styles.partyThumbnail} src={char.home_thumbnail}/>
                 </div>
             )
         }
     });
+
+
+
+
 
 
 
@@ -367,7 +373,10 @@ class Main extends React.Component {
             <React.Fragment>
                 <button onClick={()=>{this.mainMode()}}>back to main</button>
                 <p>SELECT CHAR TO INSERT</p>
-                <div>
+                <div className={styles.selectedItem} onClick={()=>{this.mainMode()}}>
+                    <img className={styles.partyThumbnail} src={this.state.selectedChar.home_thumbnail}/>
+                </div>
+                <div className={styles.showAllWrapper}>
                     {charactersList}
                 </div>
             </React.Fragment>
