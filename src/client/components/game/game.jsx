@@ -9,6 +9,7 @@ class Game extends React.Component {
     super();
     this.state = {
         charactersToGenerate: [],
+        characterPortraitsToGenerate: [],
         enemiesTransform: [],
         enemies: [],
         laneCoords: [],
@@ -20,12 +21,37 @@ class Game extends React.Component {
     this.props.mainMode();
   }
 
+  generateCharacterPortraits(coordsArr){
+    let generateCharacterPortraits = [...this.props.partyList].map((char, index) => {
+        let laneCoords = coordsArr[index];
+        const Portrait = styled.div`
+            position: absolute;
+            top: ${laneCoords.top}px;
+            left: ${laneCoords.right-100}px;
+            width: 100px;
+            height: 100px;
+            background: url('${char.battle_thumbnail}') top center;
+            background-size: cover;
+
+            transition: transform 200ms ease-in-out;
+
+          &:active {
+            transform: rotate(20deg);
+            background-color: rgba(255, 0, 0, 0.4);
+          }
+        `
+        let characterPortrait = <Portrait key={index} onClick={()=>{console.log('lols clicked')}}/>
+        return characterPortrait;
+    });
+    this.setState({characterPortraitsToGenerate: generateCharacterPortraits});
+  }
+
 
   generateCharacterSprites(coordsArr){
-    console.log('generating char sprite')
+    // console.log('generating char sprite')
     let generateCharacterSprites = [...this.props.partyList].map((char, index) => {
         let laneCoords = coordsArr[index];
-        console.log(`lane coords of ${index+1}`, laneCoords)
+        // console.log(`lane coords of ${index+1}`, laneCoords)
             const attack = keyframes`
                 0%  {background-position-x: 0px}
                 100%{background-position-x: -600px;}
@@ -39,13 +65,11 @@ class Game extends React.Component {
                 background: url('${char.spritesheet}') right center;
                 background-size: cover;
             `;
-        let character = <Character>
-
-                        </Character>
-        console.log("char to generate", character)
+        let character = <Character key={index}/>
+        // console.log("char to generate", character)
         return character
     });
-    console.log('generateCharacterSprites:', generateCharacterSprites)
+    // console.log('generateCharacterSprites:', generateCharacterSprites)
     this.setState({charactersToGenerate: generateCharacterSprites})
   }
 
@@ -53,8 +77,8 @@ class Game extends React.Component {
     let randomLaneIndex = Math.floor(Math.random()*this.state.laneCoords.length)
     let randomLaneCoords = this.state.laneCoords[randomLaneIndex]
 
-    console.log('targeting lane:', randomLaneIndex+1);
-    console.log('lane coords:', randomLaneCoords)
+    // console.log('targeting lane:', randomLaneIndex+1);
+    // console.log('lane coords:', randomLaneCoords)
     let {top, left, height, right, ...others} = randomLaneCoords;
     let enemyTransform = {
         x: right,
@@ -97,7 +121,7 @@ class Game extends React.Component {
 
                         />
                 </Enemy>
-    console.log('generating enemy:', enemy);
+    // console.log('generating enemy:', enemy);
     this.setState({
         enemies: [...this.state.enemies].concat(enemy),
         enemiesTransform: [...this.state.enemiesTransform.concat(enemyTransform)]
@@ -109,7 +133,7 @@ class Game extends React.Component {
     console.log('making char attack!');
     // console.log('index of char to animate', charIndex);
     // console.log('char:', [...this.state.charactersToGenerate][charIndex])
-    console.log(this.props.partyList)
+    // console.log(this.props.partyList)
     let characterStats = [...this.props.partyList][charIndex];
     // console.log(characterStats)
     let laneCoords = this.state.laneCoords[charIndex];
@@ -254,7 +278,7 @@ class Game extends React.Component {
         // console.log("THIS", this.state.laneCoords)
         let range0 = {upper: 127, lower: 0};
         let range1 = {upper: 237, lower: 128};
-        let range2 = {upper: 360, lower: 248};
+        let range2 = {upper: 360, lower: 238};
 
         let filteredEnemiesByX;
         let enemyGoalStart = this.state.laneCoords[0].right-200;
@@ -274,14 +298,29 @@ class Game extends React.Component {
             let laneIndex;
             if(enemyLaneCoords > 0 && enemyLaneCoords < 127){
                 laneIndex = 0;
-            } else if (enemyLaneCoords > 238 && enemyLaneCoords < 237){
+            } else if (enemyLaneCoords > 128 && enemyLaneCoords < 237){
                 laneIndex = 1;
-            } else if (enemyLaneCoords > 248 && enemyLaneCoords < 360){
+            } else if (enemyLaneCoords > 238 && enemyLaneCoords < 360){
                 laneIndex = 2;
             };
 
             enemyPassed.style = 'display: none';
             console.log("enemy passed in lane", laneIndex+1);
+
+            let characterPortraitToClick = document.getElementById('characterPortraits').children[laneIndex]
+            // console.log(characterPortraitToClick)
+
+            let simulateClick = () => {
+                console.log('simulating click')
+                let click = new MouseEvent('click', {
+                    bubbles:true,
+                    cancelable:false,
+                    view:window
+                });
+                let clicking = !characterPortraitToClick.dispatchEvent(click);
+            }
+            simulateClick();
+
         };
     } else {
         return;
@@ -300,6 +339,7 @@ class Game extends React.Component {
     })
 
     this.generateCharacterSprites(coordsArr);
+    this.generateCharacterPortraits(coordsArr);
     this.setState({laneCoords: coordsArr});
 
     var keepCheckingEnemyPassed = setInterval(()=>this.checkEnemyPassed(), 100);
@@ -307,7 +347,7 @@ class Game extends React.Component {
   }
 
   componentDidUpdate(){
-    console.log("state in enemies:", this.state);
+    // console.log("state in enemies:", this.state);
 
   }
 
@@ -381,9 +421,15 @@ class Game extends React.Component {
     let generateCharacters;
     if(this.state.charactersToGenerate.length === 3){
         generateCharacters = [...this.state.charactersToGenerate].map((char, index) => {
-            return char
-        })
-    }
+            return char;
+        });
+    };
+    let generateCharacterPortraits;
+    if(this.state.characterPortraitsToGenerate.length === 3){
+        generateCharacterPortraits = [...this.state.characterPortraitsToGenerate].map((char, index) => {
+            return char;
+        });
+    };
 
     // var startCheckEnemyPassed = setInterval(()=>this.checkEnemyPassed(), 100);
 
@@ -403,6 +449,9 @@ class Game extends React.Component {
             </div>
             <div id="characters">
                 {generateCharacters}
+            </div>
+            <div id="characterPortraits">
+                {generateCharacterPortraits}
             </div>
 
 
