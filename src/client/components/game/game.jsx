@@ -24,6 +24,12 @@ class Game extends React.Component {
   generateCharacterPortraits(coordsArr){
     let generateCharacterPortraits = [...this.props.partyList].map((char, index) => {
         let laneCoords = coordsArr[index];
+        const shake = keyframes`
+            0%  {transform: translate(10px)}
+            33% {transform: translate(0px)}
+            66% {transform: translate(-10px)}
+            100%{transform: translate(0px)}
+        `;
         const Portrait = styled.div`
             position: absolute;
             top: ${laneCoords.top}px;
@@ -32,20 +38,26 @@ class Game extends React.Component {
             height: 100px;
             background: url('${char.battle_thumbnail}') top center;
             background-size: cover;
-
-            transition: transform 200ms ease-in-out;
-
-          &:active {
-            transform: rotate(20deg);
-            background-color: rgba(255, 0, 0, 0.4);
+            animation: ${shake} .1s linear;
           }
         `
-        let characterPortrait = <Portrait key={index} onClick={()=>{console.log('lols clicked')}}/>
+        let characterPortrait = <Portrait key={index} onClick={(event)=>{
+            const target = event.target;
+            console.log(target.style)
+            target.style.animation = 'none';
+            setTimeout(function() {
+                target.style.animation = '';
+            }, 10);
+        }}/>
         return characterPortrait;
     });
     this.setState({characterPortraitsToGenerate: generateCharacterPortraits});
   }
 
+   // transition: transform 200ms ease-in-out;
+
+   //        &:active {
+   //          transform: rotate(20deg);
 
   generateCharacterSprites(coordsArr){
     // console.log('generating char sprite')
