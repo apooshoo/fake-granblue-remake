@@ -37,7 +37,7 @@ class Game extends React.Component {
                 top: ${laneCoords.top}px;
                 left: ${laneCoords.right-200}px;
                 background: url('${char.spritesheet}') right center;
-                animation: ${attack} .6s steps(6);
+                animation: ${attack} .5s steps(6);
                 background-size: cover;
             `;
         let character = <Character>
@@ -111,10 +111,11 @@ class Game extends React.Component {
     console.log('making char attack!');
     // console.log('index of char to animate', charIndex);
     // console.log('char:', [...this.state.charactersToGenerate][charIndex])
+    console.log(this.props.partyList)
     let characterStats = [...this.props.partyList][charIndex];
-    console.log(characterStats)
+    // console.log(characterStats)
     let laneCoords = this.state.laneCoords[charIndex];
-    console.log(laneCoords)
+    // console.log(laneCoords)
 
     const attack = keyframes`
         0%  {background-position-x: 0px}
@@ -127,36 +128,39 @@ class Game extends React.Component {
         top: ${laneCoords.top}px;
         left: ${laneCoords.right-200}px;
         background: url('${characterStats.spritesheet}') right center;
-        animation: ${attack} .6s steps(6);
+        animation: ${attack} .5s steps(6);
         background-size: cover;
     `;
+
+
     let character = <Character/>
-    console.log(character)
+    // console.log(character)
 
     //insert
     let wrapper = document.getElementById('characters').children
-    console.log(wrapper)
+    // console.log("wrapper", wrapper)
 
     let oldChild = wrapper[charIndex];
-    console.log(oldChild)
+    // console.log(oldChild)
 
-    wrapper.replace(oldChild, character)
-    console.log('new wrapper', wrapper)
+    // oldChild = character
+    // console.log(wrapper)
 
-    // this.setState({
-    //     charactersToGenerate: [...this.state.charactersToGenerate].splice(charIndex, 1)
-    // });
-    // console.log(this.state.charactersToGenerate)
-    // this.setState({
-    //     charactersToGenerate: [...this.state.charactersToGenerate].insert(charIndex, character)
-    // });
-    //     console.log(this.state.charactersToGenerate)
+    let temp = [...this.state.charactersToGenerate]
+    // temp.splice(charIndex, 1)
+    temp[charIndex] = null;
+    // console.log(temp)
+    this.setState({
+        charactersToGenerate: temp
+    });
+    // temp.splice(charIndex, 0 , character)
+    temp[charIndex] = character
+    // console.log(temp)
+    this.setState({
+        charactersToGenerate: temp
+    });
+        // console.log(this.state.charactersToGenerate)
 
-
-
-
-    // attackingChar.setAttribute("autoplay",  true);
-    // console.log(attackingChar.autoplay)
 
     // let simulateClick = () => {
     //     console.log('simulating click')
@@ -223,7 +227,7 @@ class Game extends React.Component {
 
         let hitboxStart = [...this.state.laneCoords][0].right-300;
         let hitboxEnd = [...this.state.laneCoords][0].right-200;
-        console.log(hitboxStart)
+        // console.log(hitboxStart)
 
         let attackTarget = sortedEnemiesByX[0];
         let attackTargetPositionX = attackTarget.getBoundingClientRect().x;
@@ -289,7 +293,7 @@ class Game extends React.Component {
             margin: 10
         }
     ];
-    console.log("styleArr", styleArr)
+    // console.log("styleArr", styleArr)
 
     let lanesArr = [];
     [...this.props.partyList].map((char, index) => {
@@ -310,7 +314,7 @@ class Game extends React.Component {
         };
 
     });
-    console.log("lanesArr", lanesArr)
+    // console.log("lanesArr", lanesArr)
     let generateLanes = lanesArr.map(lane => {
         return lane;
     })
@@ -338,7 +342,6 @@ class Game extends React.Component {
         })
     }
 
-    console.log(styles)
 
     return(
         <React.Fragment>
