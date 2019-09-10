@@ -76,8 +76,16 @@ class Game extends React.Component {
                 left: ${laneCoords.right-200}px;
                 background: url('${char.spritesheet}') right center;
                 background-size: cover;
+                animation: ${attack} .5s steps(6);
             `;
-        let character = <Character key={index}/>
+        let character = <Character key={index} onClick={(event)=>{
+            const target = event.target;
+            console.log(target.style)
+            target.style.animation = 'none';
+            setTimeout(function() {
+                target.style.animation = '';
+            }, 10);
+        }}/>
         // console.log("char to generate", character)
         return character
     });
@@ -144,68 +152,20 @@ class Game extends React.Component {
   characterAttack(charIndex){
     console.log('making char attack!');
     // console.log('index of char to animate', charIndex);
-    // console.log('char:', [...this.state.charactersToGenerate][charIndex])
-    // console.log(this.props.partyList)
-    let characterStats = [...this.props.partyList][charIndex];
-    // console.log(characterStats)
-    let laneCoords = this.state.laneCoords[charIndex];
-    // console.log(laneCoords)
+    let characters = document.getElementById('characters').children
+    let characterToAnimate = characters[charIndex];
+    // console.log("char to animate", characterToAnimate)
+    let simulateClick = () => {
+        console.log('simulating click')
+        let click = new MouseEvent('click', {
+            bubbles:true,
+            cancelable:false,
+            view:window
+        });
+        let clicking = !characterToAnimate.dispatchEvent(click);
+    }
+    simulateClick();
 
-    const attack = keyframes`
-        0%  {background-position-x: 0px}
-        100%{background-position-x: -600px;}
-    `;
-    const Character = styled.div`
-        position: absolute;
-        width: 100px;
-        height: 100px;
-        top: ${laneCoords.top}px;
-        left: ${laneCoords.right-200}px;
-        background: url('${characterStats.spritesheet}') right center;
-        animation: ${attack} .5s steps(6);
-        background-size: cover;
-    `;
-
-
-    let character = <Character/>
-    // console.log(character)
-
-    //insert
-    let wrapper = document.getElementById('characters').children
-    // console.log("wrapper", wrapper)
-
-    let oldChild = wrapper[charIndex];
-    // console.log(oldChild)
-
-    // oldChild = character
-    // console.log(wrapper)
-
-    let temp = [...this.state.charactersToGenerate]
-    // temp.splice(charIndex, 1)
-    temp[charIndex] = null;
-    // console.log(temp)
-    this.setState({
-        charactersToGenerate: temp
-    });
-    // temp.splice(charIndex, 0 , character)
-    temp[charIndex] = character
-    // console.log(temp)
-    this.setState({
-        charactersToGenerate: temp
-    });
-        // console.log(this.state.charactersToGenerate)
-
-
-    // let simulateClick = () => {
-    //     console.log('simulating click')
-    //     let click = new MouseEvent('click', {
-    //         bubbles:true,
-    //         cancelable:false,
-    //         view:window
-    //     });
-    //     let clicking = !attackingChar.dispatchEvent(click);
-    // }
-    // simulateClick()
   }
 
   uniKeyCode(event) {
