@@ -287,6 +287,10 @@ class Main extends React.Component {
     this.setState({timer: this.state.timer -1})
   }
 
+  resetTimer(){
+    this.setState({timer: 10});
+  }
+
   render() {
     let allCharacters = this.state.allCharacters;
     let usersCharacters = this.state.usersCharacters;
@@ -465,6 +469,7 @@ class Main extends React.Component {
             <Game
                 mainMode={()=>{this.mainMode()}}
                 countdown={()=>{this.countdown()}}
+                resetTimer={()=>{this.resetTimer()}}
                 mainState={this.state.mainState}
                 partyList={this.state.partyList}
                 timer={this.state.timer}

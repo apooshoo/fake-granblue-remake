@@ -10,12 +10,11 @@ class Game extends React.Component {
     this.state = {
         charactersToGenerate: [],
         characterPortraitsToGenerate: [],
-        enemiesTransform: [],
         enemies: [],
         laneCoords: [],
         keepCheckingEnemyPassed: null,
         keepCountingDown: null,
-
+        keepGeneratingEnemies: null
     }
   }
 
@@ -94,6 +93,7 @@ class Game extends React.Component {
     this.setState({charactersToGenerate: generateCharacterSprites})
   }
 
+
   generateEnemy(){
     let randomLaneIndex = Math.floor(Math.random()*this.state.laneCoords.length)
     let randomLaneCoords = this.state.laneCoords[randomLaneIndex]
@@ -101,10 +101,6 @@ class Game extends React.Component {
     // console.log('targeting lane:', randomLaneIndex+1);
     // console.log('lane coords:', randomLaneCoords)
     let {top, left, height, right, ...others} = randomLaneCoords;
-    let enemyTransform = {
-        x: right,
-        duration: 10
-    }
 
     const moveRight = keyframes`
         from {transform: translate(${left}px);}
@@ -136,9 +132,22 @@ class Game extends React.Component {
     // console.log('generating enemy:', enemy);
     this.setState({
         enemies: [...this.state.enemies].concat(enemy),
-        enemiesTransform: [...this.state.enemiesTransform.concat(enemyTransform)]
     })
 
+  }
+
+  clickToGenerateEnemy(){
+    let generateEnemyBtn = document.getElementById('generateEnemyBtn');
+    let simulateClick = () => {
+        console.log('simulating click')
+        let click = new MouseEvent('click', {
+            bubbles:true,
+            cancelable:false,
+            view:window
+        });
+        let clicking = !generateEnemyBtn.dispatchEvent(click);
+    }
+    simulateClick();
   }
 
   characterAttack(charIndex){
@@ -312,6 +321,17 @@ class Game extends React.Component {
     var keepCountingDown = setInterval(()=>this.countdown(), 1000);
     this.setState({keepCountingDown: keepCountingDown});
 
+    let interval;
+    if(this.props.difficulty === 'Easy'){
+        interval = 1600;
+    } else if (this.props.difficulty === 'Hard'){
+        interval = 800;
+    } else if (this.props.difficulty === 'Lethal'){
+        interval = 400;
+    };
+    var keepGeneratingEnemies = setInterval(()=>this.clickToGenerateEnemy(), interval);
+    this.setState({keepGeneratingEnemies: keepGeneratingEnemies});
+
     var keepCheckingEnemyPassed = setInterval(()=>this.checkEnemyPassed(), 100);
     this.setState({keepCheckingEnemyPassed: keepCheckingEnemyPassed});
   }
@@ -320,6 +340,9 @@ class Game extends React.Component {
     // console.log("state in enemies:", this.state);
     if(this.props.timer <= 0){
         clearInterval(this.state.keepCountingDown);
+        this.props.resetTimer();
+        clearInterval(this.state.keepGeneratingEnemies);
+        this.mainMode();
     }
   }
 
@@ -411,7 +434,7 @@ class Game extends React.Component {
 
     return(
         <React.Fragment>
-            <button onClick={()=>{this.generateEnemy()}}>GENERATE ENEMIES BTN</button>
+            <button id="generateEnemyBtn" onClick={()=>{this.generateEnemy()}}>GENERATE ENEMIES BTN</button>
             <button onClick={()=>{this.mainMode()}}>back to main</button>
             <p>GAME MODE</p>
             <div className={styles.lanesContainer}>
