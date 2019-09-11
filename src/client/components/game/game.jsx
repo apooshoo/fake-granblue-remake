@@ -98,6 +98,7 @@ class Game extends React.Component {
   generateEnemy(){
     let randomLaneIndex = Math.floor(Math.random()*this.state.laneCoords.length)
     let randomLaneCoords = this.state.laneCoords[randomLaneIndex]
+    let randomEnemyIndex = Math.floor(Math.random()*this.props.allCharacters.length)
 
     // console.log('targeting lane:', randomLaneIndex+1);
     // console.log('lane coords:', randomLaneCoords)
@@ -127,7 +128,7 @@ class Game extends React.Component {
     `;
 
     let enemy = <Enemy>
-                    <Spritesheet style={{width:100, height:100,}} image={this.props.partyList[0].spritesheet} widthFrame={260} heightFrame={260} steps={6} fps={12} startAt={1} endAt={6} loop={true}/>
+                    <Spritesheet style={{width:100, height:100,}} image={this.props.allCharacters[randomEnemyIndex].reverse_spritesheet} widthFrame={260} heightFrame={260} steps={6} fps={12} startAt={1} endAt={6} loop={true}/>
                 </Enemy>
     // console.log('generating enemy:', enemy);
     // this.setState({
@@ -438,16 +439,16 @@ class Game extends React.Component {
         });
     };
 
-
+    // console.log(this.props.allCharacters)
     // console.log('YOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO')
     // console.log(this.props.timer)
     // console.log(this.props.difficulty)
+            // <button onClick={()=>{this.mainMode()}}>back to main</button>
 
 
     return(
         <React.Fragment>
             <button id="generateEnemyBtn" onClick={()=>{this.generateEnemy()}}>GENERATE ENEMIES BTN</button>
-            <button onClick={()=>{this.mainMode()}}>back to main</button>
             <p>Score: {this.state.score}</p>
             <div className={styles.lanesContainer}>
                 {generateLanes}

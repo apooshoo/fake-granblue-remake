@@ -478,6 +478,7 @@ class Main extends React.Component {
                 partyList={this.state.partyList}
                 timer={this.state.timer}
                 difficulty={this.state.difficulty}
+                allCharacters={this.state.allCharacters}
             />
         );
     }
