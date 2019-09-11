@@ -8,7 +8,7 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      userId: null,
+      userId: 1,
       username: null,
       password: null,
 
@@ -25,24 +25,26 @@ class App extends React.Component {
     this.setState({password: event.target.value});
   }
 
-  submitLogin(){
-    console.log('logging in')
+  // submitLogin(){
+  //   console.log('logging in')
 
-    let temp
+  //   let temp;
 
-    fetch('/users/login', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: this.state.username,
-        password: this.state.password,
-      })
-    }).then(response => response.json())
-    .then(response => this.setState({userId: response.id}))
-  }
+  //   fetch('/users/login', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Accept': 'application/json',
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({
+  //       username: this.state.username,
+  //       password: this.state.password,
+  //     })
+  //   }).then(response => response.json())
+
+
+  //   // .then(response => this.setState({userId: response.id}))
+  // }
 
 
 
