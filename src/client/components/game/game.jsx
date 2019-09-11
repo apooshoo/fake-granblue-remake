@@ -14,7 +14,8 @@ class Game extends React.Component {
         laneCoords: [],
         keepCheckingEnemyPassed: null,
         keepCountingDown: null,
-        keepGeneratingEnemies: null
+        keepGeneratingEnemies: null,
+        score: 0
     }
   }
 
@@ -77,7 +78,7 @@ class Game extends React.Component {
                 left: ${laneCoords.right-200}px;
                 background: url('${char.spritesheet}') right center;
                 background-size: cover;
-                animation: ${attack} .5s steps(6);
+                animation: ${attack} .3s steps(6);
             `;
         let character = <Character key={index} onClick={(event)=>{
             const target = event.target;
@@ -109,11 +110,11 @@ class Game extends React.Component {
 
     let difficulty;
     if(this.props.difficulty === 'Easy'){
-        difficulty = 4;
+        difficulty = 3;
     } else if (this.props.difficulty === 'Hard'){
         difficulty = 2;
     } else if (this.props.difficulty === 'Lethal'){
-        difficulty = 1;
+        difficulty = 1.5;
     };
 
     let Enemy = styled.div`
@@ -122,7 +123,6 @@ class Game extends React.Component {
         left: ${left}px;
         height: ${height}px;
         width: 100px;
-        background-color: green;
         animation: ${moveRight} ${difficulty}s linear infinite;
     `;
 
@@ -130,9 +130,12 @@ class Game extends React.Component {
                     <Spritesheet style={{width:100, height:100,}} image={this.props.partyList[0].spritesheet} widthFrame={260} heightFrame={260} steps={6} fps={12} startAt={1} endAt={6} loop={true}/>
                 </Enemy>
     // console.log('generating enemy:', enemy);
-    this.setState({
-        enemies: [...this.state.enemies].concat(enemy),
-    })
+    // this.setState({
+    //     enemies: [...this.state.enemies].concat(enemy),
+    // })
+    this.setState((state)=>{
+        return {enemies: state.enemies.concat(enemy)}
+    });
 
   }
 
@@ -229,9 +232,17 @@ class Game extends React.Component {
         let attackTargetPositionX = attackTarget.getBoundingClientRect().x;
         if(attackTargetPositionX >= hitboxStart && attackTargetPositionX < hitboxEnd){
             console.log('bullseye!!')
-            attackTarget.style = 'display: none'
+            attackTarget.style = 'display: none';
+            // this.setState({score: this.state.score + 3});
+            this.setState((state)=>{
+                return {score: state.score + 3}
+            })
             // console.log(attackTarget)
         } else {
+            // this.setState({score: this.state.score - 1});
+            this.setState((state)=>{
+                return {score: state.score - 1}
+            })
             console.log('miss!')
         };
 
@@ -323,11 +334,11 @@ class Game extends React.Component {
 
     let interval;
     if(this.props.difficulty === 'Easy'){
-        interval = 1600;
+        interval = 1000;
     } else if (this.props.difficulty === 'Hard'){
-        interval = 800;
+        interval = 500;
     } else if (this.props.difficulty === 'Lethal'){
-        interval = 400;
+        interval = 250;
     };
     var keepGeneratingEnemies = setInterval(()=>this.clickToGenerateEnemy(), interval);
     this.setState({keepGeneratingEnemies: keepGeneratingEnemies});
@@ -436,7 +447,7 @@ class Game extends React.Component {
         <React.Fragment>
             <button id="generateEnemyBtn" onClick={()=>{this.generateEnemy()}}>GENERATE ENEMIES BTN</button>
             <button onClick={()=>{this.mainMode()}}>back to main</button>
-            <p>GAME MODE</p>
+            <p>Score: {this.state.score}</p>
             <div className={styles.lanesContainer}>
                 {generateLanes}
 
