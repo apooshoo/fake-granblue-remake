@@ -258,7 +258,7 @@ class Game extends React.Component {
     let enemies = Array.from(document.getElementById('enemies').children)
 
 
-    if (enemies !== undefined || enemies.length > 0 || this.state.laneCoords !== undefined){
+    if (enemies !== undefined || enemies.length > 0){
         // console.log("THIS", this.state.laneCoords)
         let range0 = {upper: 127, lower: 0};
         let range1 = {upper: 237, lower: 128};
@@ -290,6 +290,9 @@ class Game extends React.Component {
 
             enemyPassed.style = 'display: none';
             console.log("enemy passed in lane", laneIndex+1);
+            this.setState((state)=>{
+                return {score: state.score - 1}
+            })
 
             let characterPortraitToClick = document.getElementById('characterPortraits').children[laneIndex]
             // console.log(characterPortraitToClick)
@@ -367,17 +370,17 @@ class Game extends React.Component {
   render() {
     let styleArr= [
         {
-            backgroundColor: 'red',
+            // backgroundColor: 'red',
             height: 100,
             margin: 10
         },
         {
-            backgroundColor: 'blue',
+            // backgroundColor: 'blue',
             height: 100,
             margin: 10
         },
         {
-            backgroundColor: 'yellow',
+            // backgroundColor: 'yellow',
             height: 100,
             margin: 10
         }
@@ -390,13 +393,11 @@ class Game extends React.Component {
         if(char === null){
                 lanesArr.push(
                     <div key={index} className={className} style={styleArr[index]}>
-                        <p>Empty Lane Here at Index {index}</p>
                     </div>
                 )
         } else {
             lanesArr.push(
                 <div key={index} className={className} style={styleArr[index]}>
-                    <p>{char.name}'s lane here at Index {index}</p>
                 </div>
             )
 
