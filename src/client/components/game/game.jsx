@@ -297,7 +297,7 @@ class Game extends React.Component {
   }
 
   componentDidMount(){
-    this.setState({timer: this.props.timer})
+    // this.setState({timer: this.props.timer})
     let lanesArr = document.querySelectorAll('.lane')
     let coordsArr = [];
     [...lanesArr].map(lane => {
@@ -311,6 +311,7 @@ class Game extends React.Component {
 
     var keepCountingDown = setInterval(()=>this.countdown(), 1000);
     this.setState({keepCountingDown: keepCountingDown});
+
     var keepCheckingEnemyPassed = setInterval(()=>this.checkEnemyPassed(), 100);
     this.setState({keepCheckingEnemyPassed: keepCheckingEnemyPassed});
   }
