@@ -76,11 +76,45 @@ module.exports = (db) => {
     });
   };
 
+  let login = (req, res) => {
+    console.log('YOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOo')
+    console.log('in login ctrlr');
+    console.log("body:", req.body);
+    db.granblue.login(req.body, (err, result) => {
+        if(err){
+            console.log('err,', err);
+        } else if (result === null){
+            res.send(null);
+        } else {
+            console.log('sending:', result[0])
+            res.send(result[0]);
+        };
+    });
+  };
+
+  let register = (req, res) => {
+    console.log('in register ctrlr');
+    console.log("body:", req.body);
+    db.granblue.register(req.body, (err, result) => {
+        if(err){
+            console.log('err,', err);
+        } else if (result === null){
+            res.status(404).send('not found');
+        } else {
+            res.send(result);
+        };
+    });
+  };
+
+
+
   return {
     getUsersCharacters : getUsersCharacters,
     getAll : getAll,
     add : add,
-    editSlot : editSlot
+    editSlot : editSlot,
+    login : login,
+    register : register
   }
 
 };

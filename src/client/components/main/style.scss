@@ -11,13 +11,17 @@
 
 
 .leftColumn {
+	position: relative;
   float: left;
   width: 50%;
+  padding-top: 40px;
 }
+
 
 .partyWrapper{
 	display:inline-block;
-	margin: 0 auto;
+	margin-left: 60px;
+	margin-top:30px;
 }
 
 .listItem{
@@ -25,6 +29,10 @@
 	display: inline-block;
 }
 
+.partyThumbnailWrapper{
+	display: flex;
+	justify-content: center;
+}
 
 .partyThumbnail{
 	max-width: 150px;
@@ -44,7 +52,12 @@
 }
 
 .rightColumn {
-
+	position: relative;
+	float: right;
+	max-width: 49%;
+	width:49%;
+	max-height: 80%;
+	padding-top: 65px;
 }
 
 .drawbtn{

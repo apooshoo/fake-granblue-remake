@@ -321,21 +321,8 @@ class Main extends React.Component {
     if (allCharacters != null){
         archiveList = allCharacters.map((character, index) => {
             return(
-                <div key={index} className={styles.listItem}>
-                    <p>{character.name}</p>
-                    <Spritesheet
-                        className={styles.sprite}
-                        style={{width:100, height:100}}
-                        image={character.spritesheet}
-                        widthFrame={260}
-                        heightFrame={260}
-                        steps={6}
-                        fps={12}
-                        startAt={1}
-                        endAt={6}
-                        loop={true}
-                        onClick={()=>{this.setAndShowArt(character)}}
-                      />
+                <div className={styles.listItem} key={index} onClick={()=>{this.setAndShowArt(character)}}>
+                    <img className={styles.partyThumbnail} src={character.home_thumbnail}/>
                 </div>
             )
         });
@@ -358,6 +345,14 @@ class Main extends React.Component {
         }
     });
 
+    let showAllList = [...this.state.usersCharacters].map((char, index)=>{
+        return(
+            <div className={styles.listItem} key={index} onClick={()=>this.showAllMode(index, char)}>
+                <img className={styles.partyThumbnail} src={char.home_thumbnail}/>
+            </div>
+        );
+    });
+
 
 
 
@@ -378,35 +373,47 @@ class Main extends React.Component {
                     displayCharacter={this.state.displayCharacter}
                 />
                 <div className={styles.leftColumn}>
-                    <p>Click on thumbnail to swap!</p>
                     <div className={styles.partyWrapper}>
                         {partyList}
                     </div>
                 </div>
 
                 <div className={styles.rightColumn}>
+                    <ul>
+                        <li>Click the DRAW button to get characters</li>
+                        <li>Press PLAY once you have a party of three!</li>
+                        <li>Click on characters to swap slots</li>
+                    </ul>
+
+
+
                     <button className={styles.drawbtn} style={{backgroundImage: "url('./main/draw-scrubbed.png')"}} onClick={()=>{this.draw()}}>
                     DRAW
                     </button>
 
-                    <button className={styles.drawbtn} style={{backgroundImage: "url('./main/draw-scrubbed.png')"}} onClick={()=>{this.gameMode()}}>
-                    PLAY
-                    </button>
-                    <select value={this.state.difficulty} onChange={()=>{this.changeDifficulty()}}>
-                        <option value="Easy">Easy</option>
-                        <option value="Hard">Hard</option>
-                        <option value="Lethal">Lethal</option>
-                    </select>
-                    <select value={this.state.timer} onChange={()=>{this.changeTimer()}}>
-                        <option value={10}>10s</option>
-                        <option value={20}>20s</option>
-                    </select>
-
-
-
                     <button className={styles.drawbtn} style={{backgroundImage: "url('./main/draw-scrubbed.png')"}} onClick={()=>{this.archiveMode()}}>
                     ARCHIVE
                     </button>
+
+                    <div>
+                        <button className={styles.drawbtn} style={{backgroundImage: "url('./main/draw-scrubbed.png')"}} onClick={()=>{this.gameMode()}}>
+                        PLAY
+                        </button>
+
+                        <select className="form-control" style={{width: '31%'}} value={this.state.difficulty} onChange={()=>{this.changeDifficulty()}}>
+                            <option value="Easy">Easy</option>
+                            <option value="Hard">Hard</option>
+                            <option value="Lethal">Lethal</option>
+                        </select>
+                        <select className="form-control" style={{width: '31%'}} value={this.state.timer} onChange={()=>{this.changeTimer()}}>
+                            <option value={10}>10s</option>
+                            <option value={20}>20s</option>
+                        </select>
+                    </div>
+
+
+
+
                 </div>
             </React.Fragment>
         );
@@ -423,41 +430,38 @@ class Main extends React.Component {
 
         return (
             <React.Fragment>
-                <div className={styles.leftColumn} style={{width: '80%'}}>
-                    <p>SELECT CHAR TO INSERT</p>
-                    <div className={styles.selectedItem} onClick={()=>{this.mainMode()}}>
-                        {selectedChar()}
-                    </div>
-                    <div className={styles.showAllWrapper}>
-                        {charactersList}
+                <button className={styles.drawbtn} style={{backgroundImage: "url('./main/draw-scrubbed.png')", float:'right'}} onClick={()=>{this.mainMode()}}>HOME</button>
+                <div className={styles.leftColumn} style={{width: '100%', paddingTop: '0'}}>
+                    <p style={{textAlign: 'center', fontWeight: 'bold'}}>Click on a character to insert!</p>
+                    <div className={styles.partyThumbnailWrapper}>
+                        <div className={styles.selectedItem} onClick={()=>{this.mainMode()}}>
+                            {selectedChar()}
+                        </div>
+                        <div className={styles.showAllWrapper}>
+                            {showAllList}
+                        </div>
                     </div>
                 </div>
 
-                <div className={styles.rightColumn}>
-                    <button className={styles.drawbtn} style={{backgroundImage: "url('./main/draw-scrubbed.png')"}} onClick={()=>{this.mainMode()}}>HOME</button>
-                </div>
+
 
             </React.Fragment>
         );
     } else if (this.state.mainState === 'archive'){
         return (
             <React.Fragment>
+                <button className={styles.drawbtn} style={{backgroundImage: "url('./main/draw-scrubbed.png')", float: 'right'}} onClick={()=>{this.mainMode()}}>HOME</button>
                 <ArtModal
                     showArtModal={this.state.showArtModal}
                     hideArtModal={()=>{this.hideArtModal()}}
                     displayCharacter={this.state.displayCharacter}
                 />
 
-
-
-                <div className={styles.leftColumn} style={{width: '80%'}}>
-                    <div>
+                <div className={styles.leftColumn} style={{width: '100%', paddingTop: '0', margin: '0 auto'}}>
+                    <p style={{textAlign: 'center', fontWeight: 'bold'}}>Click on a character to view details!</p>
+                    <div className={styles.partyThumbnailWrapper}>
                         {archiveList}
                     </div>
-                </div>
-
-                <div className={styles.rightColumn}>
-                    <button className={styles.drawbtn} style={{backgroundImage: "url('./main/draw-scrubbed.png')"}} onClick={()=>{this.mainMode()}}>HOME</button>
                 </div>
 
 
