@@ -82,7 +82,6 @@ class Game extends React.Component {
             `;
         let character = <Character key={index} onClick={(event)=>{
             const target = event.target;
-            console.log(target.style)
             target.style.animation = 'none';
             setTimeout(function() {
                 target.style.animation = '';
@@ -295,9 +294,6 @@ class Game extends React.Component {
 
   countdown(){
     this.props.countdown();
-    if(this.props.timer <= 0){
-        clearInterval
-    }
   }
 
   componentDidMount(){
@@ -313,16 +309,16 @@ class Game extends React.Component {
     this.generateCharacterPortraits(coordsArr);
     this.setState({laneCoords: coordsArr});
 
-
     var keepCountingDown = setInterval(()=>this.countdown(), 1000);
+    this.setState({keepCountingDown: keepCountingDown});
     var keepCheckingEnemyPassed = setInterval(()=>this.checkEnemyPassed(), 100);
     this.setState({keepCheckingEnemyPassed: keepCheckingEnemyPassed});
   }
 
   componentDidUpdate(){
     // console.log("state in enemies:", this.state);
-    if(this.props.timer === 0){
-        clearInterval(keepCountingDown)
+    if(this.props.timer <= 0){
+        clearInterval(this.state.keepCountingDown);
     }
   }
 
@@ -405,6 +401,7 @@ class Game extends React.Component {
             return char;
         });
     };
+
 
     // console.log('YOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO')
     // console.log(this.props.timer)

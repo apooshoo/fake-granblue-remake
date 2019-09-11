@@ -282,8 +282,8 @@ class Main extends React.Component {
   }
 
   countdown(){
-    console.log('counting down')
-    console.log(this.state.timer)
+    // console.log('counting down')
+    // console.log(this.state.timer)
     this.setState({timer: this.state.timer -1})
   }
 
