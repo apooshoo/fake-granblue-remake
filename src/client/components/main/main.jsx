@@ -347,7 +347,7 @@ class Main extends React.Component {
 
     let showAllList = [...this.state.usersCharacters].map((char, index)=>{
         return(
-            <div className={styles.listItem} key={index} onClick={()=>this.showAllMode(index, char)}>
+            <div className={styles.listItem} key={index} onClick={()=>this.setActive(char)}>
                 <img className={styles.partyThumbnail} src={char.home_thumbnail}/>
             </div>
         );
