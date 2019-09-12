@@ -367,6 +367,7 @@ class Main extends React.Component {
     } else if (this.state.mainState === 'main'){
         return (
             <React.Fragment>
+            <div className={styles.background}>
                 <ArtModal
                     showArtModal={this.state.showArtModal}
                     hideArtModal={()=>{this.hideArtModal()}}
@@ -413,7 +414,7 @@ class Main extends React.Component {
 
 
 
-
+                    </div>
                 </div>
             </React.Fragment>
         );
@@ -430,6 +431,7 @@ class Main extends React.Component {
 
         return (
             <React.Fragment>
+                <div className={styles.background}>
                 <button className={styles.drawbtn} style={{backgroundImage: "url('./main/draw-scrubbed.png')", float:'right'}} onClick={()=>{this.mainMode()}}>HOME</button>
                 <div className={styles.leftColumn} style={{width: '100%', paddingTop: '0'}}>
                     <p style={{textAlign: 'center', fontWeight: 'bold'}}>Click on a character to insert!</p>
@@ -443,7 +445,7 @@ class Main extends React.Component {
                     </div>
                 </div>
 
-
+                </div>
 
             </React.Fragment>
         );
@@ -470,6 +472,7 @@ class Main extends React.Component {
         );
     } else if (this.state.mainState === 'game'){
         return(
+            <div className={styles.background}>
             <Game
                 mainMode={()=>{this.mainMode()}}
                 countdown={()=>{this.countdown()}}
@@ -480,6 +483,7 @@ class Main extends React.Component {
                 difficulty={this.state.difficulty}
                 allCharacters={this.state.allCharacters}
             />
+            </div>
         );
     }
 

@@ -448,6 +448,7 @@ class Game extends React.Component {
 
     return(
         <React.Fragment>
+            <div className={styles.background}>
             <button id="generateEnemyBtn" onClick={()=>{this.generateEnemy()}}>GENERATE ENEMIES BTN</button>
             <p>Score: {this.state.score}</p>
             <div className={styles.lanesContainer}>
@@ -464,7 +465,7 @@ class Game extends React.Component {
                 {generateCharacterPortraits}
             </div>
 
-
+            </div>
 
         </React.Fragment>
     );
